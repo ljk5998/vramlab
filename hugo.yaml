@@ -1,0 +1,98 @@
+baseURL: https://vramlab.com/
+locale: en-us
+title: VRAM Lab
+theme: PaperMod
+timeZone: Asia/Seoul
+
+enableRobotsTXT: true
+enableEmoji: true
+
+pagination:
+  pagerSize: 10
+
+minify:
+  disableXML: true
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON # required for PaperMod search page
+
+params:
+  env: production
+  description: "AI experiments on the hardware students actually have — a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs. Real measurements, no estimates."
+  keywords: [local llm, vram, benchmark, cuda, wsl2, mlx, kaggle, low vram]
+  author: VRAM Lab
+  DateFormat: "2006-01-02"
+  defaultTheme: auto
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: false
+  ShowRssButtonInSectionTermList: true
+  ShowToc: true
+  TocOpen: false
+  ShowFullTextinRSS: false
+
+  homeInfoParams:
+    Title: "VRAM Lab"
+    Content: >
+      Real measurements from memory-constrained AI hardware —
+      a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs.
+      Every number on this site was measured on real hardware, with logs to prove it.
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/CHANGEME" # TODO: 본인 GitHub 프로필로 교체
+    - name: rss
+      url: "/index.xml"
+
+  fuseOpts: # search tuning
+    isCaseSensitive: false
+    shouldSort: true
+    minMatchCharLength: 2
+    keys: [title, permalink, summary, content]
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
+    - identifier: search
+      name: Search
+      url: /search/
+      weight: 30
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 40
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true # allow raw HTML in markdown (benchmark tables, shortcode output)
+  highlight:
+    codeFences: true
+    guessSyntax: false
+    noClasses: false
+    style: monokai
+
+privacy:
+  vimeo:
+    disabled: true
+  x:
+    disabled: true
+  instagram:
+    disabled: true
+  youtube:
+    privacyEnhanced: true

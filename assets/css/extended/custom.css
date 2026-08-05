@@ -1,0 +1,55 @@
+/* ============================================================
+   VRAM Lab custom styles — PaperMod가 이 파일을 자동으로 병합함.
+   (assets/css/extended/*.css 는 테마 CSS 뒤에 로드됨)
+   CSS 학습은 여기서 시작: 이 파일만 고치면 사이트 전체에 반영.
+   ============================================================ */
+
+/* --- 벤치마크 표: 이 블로그의 핵심 컴포넌트 --- */
+
+/* 표가 화면보다 넓으면 표만 가로 스크롤 (모바일 필수) */
+.post-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 0.92em;
+}
+
+/* 줄무늬 + 헤더 강조 */
+.post-content table th {
+  background: var(--code-bg);
+  position: sticky;
+  top: 0;
+}
+.post-content table tr:nth-child(even) td {
+  background: var(--code-bg);
+}
+
+/* 표 안 숫자 정렬용 유틸리티 (마크다운 표에서 오른쪽 정렬이 필요하면
+   해당 셀 값을 <span class="num">42.3</span> 으로 감싸기) */
+.post-content table .num {
+  display: block;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 측정 조건 박스: 모든 벤치마크 글 상단에 쓰는 환경 명시 블록 ---
+   사용법(마크다운에서):
+   <div class="lab-conditions">
+   <strong>Measured on:</strong> RTX 3060 Laptop 6 GB (TGP 95 W, plugged in) ·
+   Driver 555.xx · llama.cpp b1234 · 2026-08-05
+   </div>
+*/
+.lab-conditions {
+  border-left: 3px solid var(--tertiary);
+  background: var(--code-bg);
+  padding: 0.6em 1em;
+  margin: 1em 0;
+  font-size: 0.9em;
+  border-radius: 0 6px 6px 0;
+}
+
+/* --- 인라인 코드 가독성 미세 조정 --- */
+.post-content code {
+  font-size: 0.88em;
+}
