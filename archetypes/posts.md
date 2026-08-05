@@ -1,9 +1,11 @@
 ---
 title: "{{ replace .File.ContentBaseName "-" " " | title }}"
 date: {{ .Date }}
+lastmod: {{ .Date }}
 draft: true
 tags: []
 description: "" # 검색 결과에 노출되는 한 줄 요약 — 150자 이내, 키워드 포함
+images: [] # 발행 전 OG 카드 경로 추가 (예: /images/og-슬러그.png)
 showToc: true
 ---
 

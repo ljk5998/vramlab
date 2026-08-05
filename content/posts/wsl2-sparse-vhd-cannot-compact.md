@@ -1,6 +1,7 @@
 ---
 title: "Shrink WSL2 ext4.vhdx in 2026: Sparse VHD vs diskpart, Measured"
 date: 2026-08-06
+lastmod: 2026-08-06
 tags: ["wsl2", "windows", "disk-space", "troubleshooting"]
 images: ["/images/og-wsl2-vhdx.png"]
 description: "Deleted 20 GB inside WSL but ext4.vhdx stayed huge? Measured on WSL 2.7.3: fstrim no longer needed, sparse VHD gated as unsafe, diskpart rejects sparse files."

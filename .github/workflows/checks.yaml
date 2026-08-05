@@ -1,0 +1,79 @@
+# 콘텐츠·빌드 품질 검사 — PR과 main push마다 실행
+# (배포는 hugo.yaml 워크플로가 담당, 여기는 검사만)
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 21 * * 0" # 매주 월요일 06:00 KST — 외부 링크 검사
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-lint:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.164.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Hugo
+        run: |
+          wget -qO ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Content lint (front matter·초안 유출·자산 존재)
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/lint_content.py
+      - name: Production build (초안 제외)
+        run: hugo --minify --baseURL "https://vramlab.com/"
+      - name: Draft leak check (빌드 결과에 draft 글이 없는지)
+        run: |
+          python3 - << 'EOF'
+          import re, sys
+          from pathlib import Path
+          import yaml
+          drafts = []
+          for p in Path("content/posts").glob("*.md"):
+              m = re.match(r"^---\n(.*?)\n---", p.read_text(encoding="utf-8"), re.S)
+              fm = yaml.safe_load(m.group(1)) if m else {}
+              if fm.get("draft"):
+                  slug = p.stem
+                  if Path(f"public/posts/{slug}/index.html").exists():
+                      drafts.append(slug)
+          if drafts:
+              print("FAIL: draft 글이 빌드에 포함됨:", drafts); sys.exit(1)
+          print("draft 유출 없음")
+          EOF
+      - name: Internal link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --root-dir ${{ github.workspace }}/public --no-progress "public/**/*.html"
+          fail: true
+
+  external-links:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.164.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Hugo
+        run: |
+          wget -qO ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Build
+        run: hugo --minify --baseURL "https://vramlab.com/"
+      - name: External link check (주간)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --root-dir ${{ github.workspace }}/public --no-progress --max-retries 3 --accept "200..204,206,301,302,429" "public/**/*.html"
+          fail: true
