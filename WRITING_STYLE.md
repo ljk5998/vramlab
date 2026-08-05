@@ -56,6 +56,7 @@ In conclusion / Let's dive in / exciting / amazing / crucial(남용) / comprehen
 
 ## 콘텐츠 경계 (신분 보호)
 
+- **저자 표기는 고정 필명 "Sinhyeok Lee"만 사용.** 대학원생·연구자 신분, 소속 언급 금지 (About·글 본문·author 메타 전부)
 - 미발표 연구 데이터·랩 내부 정보·진행 중 과제 내용 노출 금지
 - 연구 부산물은 "환경 구축·에러 해결" 수준까지만
 - 타 사이트 표·수치 전재 금지 (링크+요지 인용만), SO 코드 복붙 금지

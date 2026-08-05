@@ -7,8 +7,6 @@ ShowReadingTime: false
 ShowBreadCrumbs: false
 ---
 
-<!-- TODO: Cloudflare Email Routing으로 contact@vramlab.com을 Gmail로 포워딩 설정 후 주소 교체 -->
-
 - Email: `contact@vramlab.com`
 - GitHub: [ljk5998](https://github.com/ljk5998)
 

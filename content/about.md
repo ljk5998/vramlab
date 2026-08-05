@@ -8,20 +8,26 @@ ShowReadingTime: false
 ShowBreadCrumbs: false
 ---
 
-<!-- TODO: 본인 소개로 다듬기 — 실명 또는 필명, 전공, 연구 분야.
-     E-E-A-T와 애드센스 심사에 About의 신뢰성이 중요합니다.
-     "실기기에서 직접 측정한다"는 정체성을 명확히. -->
-
 **VRAM Lab** publishes real measurements from the hardware most students and hobbyists actually have — not the hardware cloud vendors wish you rented.
 
-The lab equipment:
+I write here under the name **Sinhyeok Lee**. I run machine-learning experiments on memory-constrained hardware daily, and this site is where the environment-wrangling notes and measurement logs become searchable — so the next person hitting the same error spends five minutes instead of five hours.
+
+## The lab equipment
 
 - **RTX 3060 Laptop GPU (6 GB VRAM)** — Windows 11 + WSL2, the classic "gaming laptop doing ML" setup
 - **MacBook Air M4 (16 GB unified memory)** — fanless Apple Silicon
 - **Free cloud GPUs** — Kaggle T4 ×2, Google Colab
 
-Every benchmark on this site was run on this hardware by me, with the exact versions, commands, power settings, and raw logs published alongside the numbers. When something does **not** fit or run, that negative result gets published too — knowing where the wall is matters more than marketing numbers.
+## How measurements are done
 
-I am a graduate student researching machine learning and security. This blog is where my environment-wrangling notes and measurement logs become searchable, so the next person hitting the same error spends five minutes instead of five hours.
+Every number on this site was measured by me, on the hardware above. Each benchmark post states the exact versions, commands, and power conditions it ran under, and publishes the raw session log alongside the numbers. When something does **not** fit or run, that negative result gets published too — knowing where the wall is matters more than marketing numbers.
 
-Contact: see [Contact](/contact/).
+Behavior on this stack is version-dependent. Posts state the version they were verified on, and get an "Updated" note when re-measured.
+
+## Disclosure
+
+Some posts may contain affiliate links, and they are identified as such where they appear. Measurements and conclusions are never influenced by affiliate relationships — negative results are published regardless of who sells the hardware. There are no sponsored posts on this site.
+
+## Corrections
+
+If you ran one of my benchmarks and got different numbers, or spotted an error, please tell me — see [Contact](/contact/). Confirmed corrections are applied to the post with a visible update note; I would rather be corrected than wrong.

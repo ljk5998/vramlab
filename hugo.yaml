@@ -23,7 +23,14 @@ params:
   env: production
   description: "AI experiments on the hardware students actually have — a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs. Real measurements, no estimates."
   keywords: [local llm, vram, benchmark, cuda, wsl2, mlx, kaggle, low vram]
-  author: VRAM Lab
+  author: Sinhyeok Lee
+  images: ["/images/og-default.png"] # 사이트 기본 og:image (글별 images 파라미터가 우선)
+
+  assets:
+    favicon: "/favicon.ico"
+    favicon16x16: "/favicon-16x16.png"
+    favicon32x32: "/favicon-32x32.png"
+    apple_touch_icon: "/apple-touch-icon.png"
   DateFormat: "2006-01-02"
   defaultTheme: auto
   disableThemeToggle: false

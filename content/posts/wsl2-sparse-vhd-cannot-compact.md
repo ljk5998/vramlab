@@ -2,6 +2,7 @@
 title: "Shrink WSL2 ext4.vhdx in 2026: Sparse VHD vs diskpart, Measured"
 date: 2026-08-06
 tags: ["wsl2", "windows", "disk-space", "troubleshooting"]
+images: ["/images/og-wsl2-vhdx.png"]
 description: "Deleted 20 GB inside WSL but ext4.vhdx stayed huge? Measured on WSL 2.7.3: fstrim no longer needed, sparse VHD gated as unsafe, diskpart rejects sparse files."
 showToc: true
 ---
@@ -14,7 +15,7 @@ Ubuntu 26.04 LTS (fresh install) · 2026-08-06 · every size below read from the
 
 ## The problem
 
-My research distro once grew to ~47 GB — conda environments, Hugging Face caches, PyTorch checkpoints. I deleted files inside WSL, watched `df -h` drop, and the `ext4.vhdx` on the Windows side did not give back a single byte. Back then I gave up and nuked the whole distro with `wsl --unregister`.
+My main ML distro once grew to ~47 GB — conda environments, Hugging Face caches, PyTorch checkpoints. I deleted files inside WSL, watched `df -h` drop, and the `ext4.vhdx` on the Windows side did not give back a single byte. Back then I gave up and nuked the whole distro with `wsl --unregister`.
 
 While rebuilding it, I did what I should have done the first time: reproduced the bloat on purpose and measured **every** reclaim path people recommend. It turns out most of the advice you will find — `fstrim` first, enable `sparseVhd=true` — no longer matches how current WSL behaves, and one of those options is now explicitly gated by Microsoft as unsafe.
 
