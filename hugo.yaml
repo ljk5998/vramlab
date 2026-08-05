@@ -48,7 +48,7 @@ params:
 
   socialIcons:
     - name: github
-      url: "https://github.com/CHANGEME" # TODO: 본인 GitHub 프로필로 교체
+      url: "https://github.com/ljk5998"
     - name: rss
       url: "/index.xml"
 
