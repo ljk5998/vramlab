@@ -1,0 +1,5 @@
+{{- /* Cloudflare Web Analytics — 쿠키 없는 방문 분석, production 빌드에서만 삽입 */ -}}
+{{- if and hugo.IsProduction site.Params.cloudflareAnalyticsToken }}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+  data-cf-beacon='{"token": "{{ site.Params.cloudflareAnalyticsToken }}"}'></script>
+{{- end }}

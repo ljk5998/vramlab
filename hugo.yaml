@@ -25,6 +25,7 @@ params:
   keywords: [local llm, vram, benchmark, cuda, wsl2, mlx, kaggle, low vram]
   author: Sinhyeok Lee
   images: ["/images/og-default.png"] # 사이트 기본 og:image (글별 images 파라미터가 우선)
+  cloudflareAnalyticsToken: "" # Cloudflare 대시보드 > Web Analytics > Add site에서 발급받은 token 입력 (비어 있으면 스크립트 미삽입)
 
   assets:
     favicon: "/favicon.ico"
