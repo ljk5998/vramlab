@@ -1,8 +1,8 @@
 ---
-title: "WSL2 ext4.vhdx Won't Shrink: What Actually Works in 2026 (Sparse VHD, diskpart, fstrim — All Measured)"
+title: "WSL2 ext4.vhdx Won't Shrink? Sparse VHD and diskpart, Measured"
 date: 2026-08-06
 tags: ["wsl2", "windows", "disk-space", "troubleshooting"]
-description: "Deleted 20 GB inside WSL2 but ext4.vhdx stayed huge? I measured every reclaim path on WSL 2.7.3: fstrim is no longer needed, sparse VHD is gated behind --allow-unsafe, and diskpart refuses sparse files. Full numbers inside."
+description: "Deleted 20 GB inside WSL but ext4.vhdx stayed huge? Measured on WSL 2.7.3: fstrim no longer needed, sparse VHD gated as unsafe, diskpart rejects sparse files."
 showToc: true
 ---
 
@@ -16,7 +16,11 @@ Ubuntu 26.04 LTS (fresh install) · 2026-08-06 · every size below read from the
 
 My research distro once grew to ~47 GB — conda environments, Hugging Face caches, PyTorch checkpoints. I deleted files inside WSL, watched `df -h` drop, and the `ext4.vhdx` on the Windows side did not give back a single byte. Back then I gave up and nuked the whole distro with `wsl --unregister`.
 
-While rebuilding it, I did what I should have done the first time: reproduced the bloat on purpose and measured **every** reclaim path people recommend. It turns out most of the advice you will find — `fstrim` first, enable `sparseVhd=true` — is outdated in 2026, and one of those options is now explicitly gated by Microsoft as unsafe.
+While rebuilding it, I did what I should have done the first time: reproduced the bloat on purpose and measured **every** reclaim path people recommend. It turns out most of the advice you will find — `fstrim` first, enable `sparseVhd=true` — no longer matches how current WSL behaves, and one of those options is now explicitly gated by Microsoft as unsafe.
+
+One scope note before the numbers: everything below was verified on **WSL 2.7.3.0 on Windows 11 build 26200** with a fresh Ubuntu 26.04 distro. WSL changes fast — on an older WSL (check with `wsl --version`) the fstrim advice may still apply. The raw session log is [here](/logs/wsl2-vhdx-experiment-20260806.txt).
+
+![Measured ext4.vhdx size at each experiment step — logical size vs size on disk](/images/wsl2-vhdx-size-steps.svg)
 
 Here is the reproduction, with real numbers at every step.
 
@@ -37,7 +41,7 @@ rm -rf ~/fakecache
 | After writing 20 GB | 21.41 GB | 21.41 GB |
 | After deleting all of it inside WSL | **21.41 GB** | **21.41 GB** |
 
-`df -h` inside WSL showed usage back down to 1.3 GB. The vhdx did not move. This is expected: the vhdx is a dynamically expanding virtual disk — it grows on write and never shrinks on its own.
+`df -h` inside WSL showed usage back down to 1.3 GB. The vhdx did not move. This is expected — Microsoft's [`compact vdisk` reference](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/compact-vdisk) says it plainly: a dynamically expanding VHD's physical size does not shrink automatically when you delete files from it.
 
 So far this matches the old guides. Everything after this point does not.
 
@@ -66,7 +70,7 @@ diskpart /s compact.txt      # (elevated; script below)
 
 Full reclaim, zero fstrim. If a guide tells you `compact` won't work without fstrim, it was written for an older WSL. (Running `fstrim` anyway is harmless — it just re-trims free space.)
 
-The `compact.txt` script for diskpart (works on Windows Home, which has no Hyper-V `Optimize-VHD`):
+The `compact.txt` script for diskpart's [`compact vdisk`](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/compact-vdisk) (per the docs, the VHD must be detached or attached read-only — hence the `readonly` below). The commonly suggested alternative, [`Optimize-VHD`](https://learn.microsoft.com/en-us/powershell/module/hyper-v/optimize-vhd), is a Hyper-V-module cmdlet — if your edition has no Hyper-V tooling (Windows Home, my case), that cmdlet simply isn't there, and diskpart is the path that works everywhere:
 
 ```text
 select vdisk file="C:\Users\<you>\AppData\Local\wsl\{your-guid}\ext4.vhdx"
@@ -83,11 +87,13 @@ Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss |
   Get-ItemProperty | Select-Object DistributionName, BasePath
 ```
 
-> ⚠ Double-check the `file=` path before running. diskpart operates on whatever you point it at.
+(Microsoft's [WSL disk-space guide](https://learn.microsoft.com/en-us/windows/wsl/disk-space) documents the same lookup. Notably, its current revision covers **expanding** the disk and repairing it — not shrinking it. The shrink procedure lives in the diskpart reference above, which is part of why so many people end up on random blog posts for this.)
+
+> **Before you run this**: ① double-check the `file=` path — diskpart operates on whatever you point it at; ② make sure WSL is fully stopped (`wsl --shutdown`, then give it a few seconds); ③ if the distro holds anything you care about, take a backup first — `wsl --export <distro> backup.tar` gives you a full restorable copy. `compact` is a read-only-attach operation and completed cleanly in my runs, but you are operating on the disk image itself.
 
 ## Finding 2: sparse VHD is now disabled as unsafe
 
-The other classic recommendation is `sparseVhd=true` in `.wslconfig` (or `wsl --manage <distro> --set-sparse true`) so the vhdx shrinks automatically. Here is what WSL 2.7.3 says today:
+The other classic recommendation is [`sparseVhd=true` in `.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config) — an experimental setting [introduced with the September 2023 WSL update](https://devblogs.microsoft.com/commandline/windows-subsystem-for-linux-september-2023-update/), applied to existing distros via `wsl --manage <distro> --set-sparse true` — so the vhdx shrinks automatically. Here is what WSL 2.7.3 says today:
 
 ```text
 $ wsl --manage Ubuntu --set-sparse true
@@ -97,7 +103,7 @@ wsl.exe --manage <DistributionName> --set-sparse true --allow-unsafe
 Error code: Wsl/Service/E_INVALIDARG
 ```
 
-Microsoft gated the feature behind an `--allow-unsafe` flag because of data-corruption reports. That alone should end the "just enable sparse" advice for any distro whose contents you care about.
+The gate shipped in [WSL 2.5.6 (April 2025)](https://github.com/microsoft/WSL/releases/tag/2.5.6) — the release note is one line: *"Put sparse vhd support behind an --allow-unsafe flag."* The note doesn't give a reason; the error text does ("potential data corruption"), and it is literal enough that a GitHub issue [carries it as its title](https://github.com/microsoft/WSL/issues/13075). Users had reported corrupted vhdx files on sparse-enabled distros before the gate (for example [#10609](https://github.com/microsoft/WSL/issues/10609) — repeated ext4 corruption after enabling `sparseVhd`; the cause was never conclusively pinned, but reports like it are presumably what the gate is protecting against). That should end the "just enable sparse" advice for any distro whose contents you care about.
 
 Since my distro was still empty scratch, I forced it on to measure what sparse mode actually does.
 
@@ -132,7 +138,7 @@ uncompressed and unencrypted and must not be sparse.
 
 (My Windows is Korean-locale; that is the canonical English text of the same error — it fails at `attach vdisk`.)
 
-So with sparse enabled you get: real space reclaimed automatically, a scary-looking logical size you cannot compact away, and a corruption warning from Microsoft. That combination is why "wsl2 sparse vhd cannot compact" has so many unresolved threads.
+So with sparse enabled you get: real space reclaimed automatically, a scary-looking logical size you cannot compact away, and a corruption warning from Microsoft. That combination is why "wsl2 sparse vhd cannot compact" has so many unresolved threads — [this Microsoft Q&A question](https://learn.microsoft.com/en-us/answers/questions/1526083/in-wsl2-with-sparse-vhd-the-storage-usage-does-not), titled *"the storage usage does not shrink automatically, cannot compact it anymore manually"*, is Findings 3 and 4 happening to one person at the same time.
 
 ## Finding 5: turning sparse off re-inflates the file
 
@@ -146,9 +152,9 @@ One more trap on the way out. Converting back with `--set-sparse false` **re-mat
 
 If you ever used sparse mode and later disable it, budget the disk space for that re-inflation and finish with a compact.
 
-## What to actually do in 2026
+## What to actually do (on WSL 2.7.3)
 
-Full measurement series (fresh Ubuntu 26.04, WSL 2.7.3.0):
+Full measurement series (fresh Ubuntu 26.04, WSL 2.7.3.0, Windows 11 build 26200):
 
 | # | Action | Logical | On disk |
 |---|---|---|---|
@@ -172,4 +178,4 @@ My recommendations, in order:
 
 ---
 
-_Everything above was measured on my own machine on 2026-08-06; timestamps and sizes are from the actual run. If you get different behavior on another WSL version, I want to know — see [Contact](/contact/)._
+_Everything above was measured on my own machine on 2026-08-06; the full session log with timestamps is published at [/logs/wsl2-vhdx-experiment-20260806.txt](/logs/wsl2-vhdx-experiment-20260806.txt), and the fill/measure/compact commands in it are enough to reproduce the whole run. Behavior is version-dependent — if you get different results on another WSL build, I want to know: [Contact](/contact/)._
