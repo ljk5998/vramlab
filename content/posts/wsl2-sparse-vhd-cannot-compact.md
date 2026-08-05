@@ -1,79 +1,175 @@
 ---
-title: "WSL2 vhdx Won't Shrink? How I Reclaimed 51 GB (sparse VHD, fstrim, Optimize-VHD)"
-date: 2026-08-05
-draft: true
+title: "WSL2 ext4.vhdx Won't Shrink: What Actually Works in 2026 (Sparse VHD, diskpart, fstrim — All Measured)"
+date: 2026-08-06
 tags: ["wsl2", "windows", "disk-space", "troubleshooting"]
-description: "WSL2's ext4.vhdx keeps growing and compact does nothing — especially with sparse VHD enabled. Step-by-step how I reclaimed 51 GB, with measured numbers at each step."
+description: "Deleted 20 GB inside WSL2 but ext4.vhdx stayed huge? I measured every reclaim path on WSL 2.7.3: fstrim is no longer needed, sparse VHD is gated behind --allow-unsafe, and diskpart refuses sparse files. Full numbers inside."
 showToc: true
 ---
 
-<!-- ============================================================
-첫 글 초안 스캐폴드 — 2026-08-05 WSL 삭제 전 실제로 한 51GB 회수 작업을 재구성.
-각 섹션의 TODO를 실제 로그·수치로 채우면 발행 준비 완료.
-target keyword: "wsl2 sparse vhd cannot compact" / "wsl2 vhdx shrink not working"
-============================================================ -->
+<div class="lab-conditions">
+<strong>Measured on:</strong> Windows 11 Home 10.0.26200 · WSL 2.7.3.0 (kernel 6.6.114.1-1) ·
+Ubuntu 26.04 LTS (fresh install) · 2026-08-06 · every size below read from the actual
+<code>ext4.vhdx</code>, both logical size and size-on-disk
+</div>
 
 ## The problem
 
-<!-- TODO: 증상 서술 — C 드라이브가 가득 찼는데 WSL 안에서 파일을 지워도
-     ext4.vhdx 크기가 줄지 않는 상황. 탐색기에서 본 vhdx 크기 스크린샷/수치. -->
+My research distro once grew to ~47 GB — conda environments, Hugging Face caches, PyTorch checkpoints. I deleted files inside WSL, watched `df -h` drop, and the `ext4.vhdx` on the Windows side did not give back a single byte. Back then I gave up and nuked the whole distro with `wsl --unregister`.
 
-You deleted tens of gigabytes inside WSL2 — Hugging Face model caches, conda environments, datasets — but `ext4.vhdx` on the Windows side is still the same size. Worse, if you ever enabled `sparseVhd=true`, the usual compact commands may silently do nothing.
+While rebuilding it, I did what I should have done the first time: reproduced the bloat on purpose and measured **every** reclaim path people recommend. It turns out most of the advice you will find — `fstrim` first, enable `sparseVhd=true` — is outdated in 2026, and one of those options is now explicitly gated by Microsoft as unsafe.
 
-Here is what actually happened on my machine, with the numbers at each step.
+Here is the reproduction, with real numbers at every step.
 
-## Environment
+## Reproducing the bloat
 
-<!-- TODO: 실제 버전 채우기 -->
+Fresh Ubuntu 26.04 distro. I wrote 20 GB of **random** data (random matters — zeroed blocks would let `compact` cheat) to simulate a model cache, then deleted it:
 
-| Component | Version |
-|---|---|
-| Windows 11 Home | 10.0.26200 |
-| WSL | `wsl --version` 출력 |
-| Distro | Ubuntu 22.04 (ext4.vhdx) |
-| vhdx size before | ~XX GB |
-| Actual usage inside WSL | ~XX GB |
+```bash
+mkdir -p ~/fakecache && cd ~/fakecache
+for i in 1 2 3 4; do dd if=/dev/urandom of=blob_$i bs=4M count=1280 status=none; done
+# ... later ...
+rm -rf ~/fakecache
+```
 
-## Why the vhdx doesn't shrink by itself
-
-<!-- TODO: 원리 설명 — ext4.vhdx는 동적 확장 가상 디스크라 내부 삭제가
-     호스트 파일 크기에 반영되지 않음. sparse VHD 모드의 동작과
-     "sparse 상태에서는 수동 compact가 실패한다"는 함정 설명. -->
-
-## What didn't work
-
-<!-- TODO: 실패 경로 — 각각 실제로 시도한 결과와 회수량 0인 증거
-1. `wsl --shutdown` 후 diskpart compact vdisk → sparse 상태라 실패/무효과 (에러 메시지)
-2. Optimize-VHD (Home 에디션이라 Hyper-V 모듈 없음 → 대안 필요)
--->
-
-## What worked: the full sequence
-
-<!-- TODO: 성공 절차 — 단계마다 실측 회수량 기록
-1. WSL 안에서 정리: HF 캐시/conda 정리 (du -sh 전후)
-2. sudo fstrim -a -v  → trim된 용량 출력
-3. wsl --manage <distro> --set-sparse false  (sparse 해제)
-4. wsl --shutdown
-5. diskpart: select vdisk file="..." / attach vdisk readonly / compact vdisk / detach vdisk
-   → 단계별 vhdx 크기 변화 표
--->
-
-| Step | vhdx size after | Reclaimed |
+| Step | vhdx logical size | vhdx size on disk |
 |---|---|---|
-| (start) | XX GB | — |
-| fstrim | XX GB | XX GB |
-| sparse off + compact | XX GB | XX GB |
-| **Total** | **XX GB** | **51 GB** |
+| Fresh distro | 1.41 GB | 1.41 GB |
+| After writing 20 GB | 21.41 GB | 21.41 GB |
+| After deleting all of it inside WSL | **21.41 GB** | **21.41 GB** |
 
-## If your vhdx is bloated by ML caches specifically
+`df -h` inside WSL showed usage back down to 1.3 GB. The vhdx did not move. This is expected: the vhdx is a dynamically expanding virtual disk — it grows on write and never shrinks on its own.
 
-<!-- TODO: 이 블로그 독자용 보너스 — HF_HOME 이동, pip/conda 캐시,
-     다음 글(HF cache 관리) 내부 링크 예고 -->
+So far this matches the old guides. Everything after this point does not.
 
-## Verification
+## Finding 1: you don't need fstrim anymore
 
-<!-- TODO: 회수 후 스크린샷 — 탐색기 vhdx 크기, WSL 정상 부팅 확인 -->
+Every guide from 2020–2022 says the same thing: run `sudo fstrim -a` inside WSL first, *then* compact, otherwise the freed blocks won't be reclaimable.
+
+On current WSL that step is already done for you. Check the root mount:
+
+```text
+$ grep -E ' / ' /proc/mounts
+/dev/sdd / ext4 rw,relatime,discard,errors=remount-ro,data=ordered 0 0
+```
+
+`discard` is in the default mount options — deletes send TRIM to the virtual disk immediately, online. To verify, I went straight from `rm` to compact **without any fstrim**:
+
+```text
+wsl --shutdown
+diskpart /s compact.txt      # (elevated; script below)
+```
+
+| Step | vhdx logical size |
+|---|---|
+| Before compact (garbage blocks, no fstrim) | 21.41 GB |
+| After `wsl --shutdown` + `diskpart compact` | **1.38 GB** |
+
+Full reclaim, zero fstrim. If a guide tells you `compact` won't work without fstrim, it was written for an older WSL. (Running `fstrim` anyway is harmless — it just re-trims free space.)
+
+The `compact.txt` script for diskpart (works on Windows Home, which has no Hyper-V `Optimize-VHD`):
+
+```text
+select vdisk file="C:\Users\<you>\AppData\Local\wsl\{your-guid}\ext4.vhdx"
+attach vdisk readonly
+compact vdisk
+detach vdisk
+exit
+```
+
+Find your vhdx path with:
+
+```powershell
+Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss |
+  Get-ItemProperty | Select-Object DistributionName, BasePath
+```
+
+> ⚠ Double-check the `file=` path before running. diskpart operates on whatever you point it at.
+
+## Finding 2: sparse VHD is now disabled as unsafe
+
+The other classic recommendation is `sparseVhd=true` in `.wslconfig` (or `wsl --manage <distro> --set-sparse true`) so the vhdx shrinks automatically. Here is what WSL 2.7.3 says today:
+
+```text
+$ wsl --manage Ubuntu --set-sparse true
+Sparse VHD support is currently disabled due to potential data corruption.
+To force a distribution to use a sparse vhd, please run:
+wsl.exe --manage <DistributionName> --set-sparse true --allow-unsafe
+Error code: Wsl/Service/E_INVALIDARG
+```
+
+Microsoft gated the feature behind an `--allow-unsafe` flag because of data-corruption reports. That alone should end the "just enable sparse" advice for any distro whose contents you care about.
+
+Since my distro was still empty scratch, I forced it on to measure what sparse mode actually does.
+
+## Finding 3: sparse mode works — but not where you're looking
+
+With sparse forced on, I repeated the 20 GB fill-and-delete. Five seconds after `rm`:
+
+| | vhdx logical size | vhdx size on disk |
+|---|---|---|
+| Sparse on, 20 GB written | 21.38 GB | 21.38 GB |
+| 5 s after deleting inside WSL | **21.42 GB** | **1.45 GB** |
+
+Read that row again. The **real disk usage auto-reclaimed within seconds** — no shutdown, no compact. But the **logical file size never shrinks**, and that is the number Explorer's default view, `dir`, and most cleanup tools show you.
+
+This is, I believe, the entire source of the "sparse VHD doesn't shrink" confusion in the Microsoft Q&A threads: sparse mode is working, but you are looking at the logical size. To see the truth, check the file's **Size on disk** in Properties, or:
+
+```powershell
+fsutil sparse queryflag <path-to-vhdx>   # is it sparse?
+# size on disk ≈ "compressed" size:
+(Get-Item <vhdx>).Length                 # logical
+```
+
+## Finding 4: diskpart refuses sparse files — the exact error
+
+And if you try to fix that big logical number with diskpart while the file is sparse:
+
+```text
+DiskPart has encountered an error: The requested operation could not be completed
+due to a virtual disk system limitation. Virtual hard disk files must be
+uncompressed and unencrypted and must not be sparse.
+```
+
+(My Windows is Korean-locale; that is the canonical English text of the same error — it fails at `attach vdisk`.)
+
+So with sparse enabled you get: real space reclaimed automatically, a scary-looking logical size you cannot compact away, and a corruption warning from Microsoft. That combination is why "wsl2 sparse vhd cannot compact" has so many unresolved threads.
+
+## Finding 5: turning sparse off re-inflates the file
+
+One more trap on the way out. Converting back with `--set-sparse false` **re-materializes the holes**:
+
+| | vhdx logical size | vhdx size on disk |
+|---|---|---|
+| Sparse on, after auto-reclaim | 21.39 GB | 1.45 GB |
+| Right after `--set-sparse false` | 21.39 GB | **21.39 GB** |
+| After one final diskpart compact | **1.39 GB** | 1.39 GB |
+
+If you ever used sparse mode and later disable it, budget the disk space for that re-inflation and finish with a compact.
+
+## What to actually do in 2026
+
+Full measurement series (fresh Ubuntu 26.04, WSL 2.7.3.0):
+
+| # | Action | Logical | On disk |
+|---|---|---|---|
+| 0 | Fresh distro | 1.41 GB | 1.41 GB |
+| 1 | Write 20 GB (random) | 21.41 | 21.41 |
+| 2 | Delete inside WSL | 21.41 | 21.41 |
+| 3 | `wsl --shutdown` + diskpart compact — **no fstrim** | 1.38 | 1.38 |
+| 4 | `--set-sparse true` → blocked, needs `--allow-unsafe` | — | — |
+| 5 | (forced sparse) write 20 GB | 21.38 | 21.38 |
+| 6 | Delete → auto-reclaim in ~5 s | 21.42 | 1.45 |
+| 7 | diskpart compact while sparse → **fails** | — | — |
+| 8 | `--set-sparse false` → re-inflates | 21.39 | 21.39 |
+| 9 | Final diskpart compact | 1.39 | 1.39 |
+
+My recommendations, in order:
+
+1. **Stay non-sparse** (the default). When the vhdx gets fat, run `wsl --shutdown` then the diskpart script above. On WSL 2.7+ you can skip fstrim — `discard` is already in the mount options.
+2. **Don't force `--allow-unsafe` sparse** on a distro you care about. Microsoft gated it for corruption risk; the auto-reclaim is nice but not worth your conda environments.
+3. **If you already have sparse enabled** and the file "won't shrink": check *size on disk* first — it probably already shrank. The logical size is cosmetic until you convert back (Finding 5).
+4. **Prevent the bloat instead**: the usual suspects are Hugging Face caches, pip/conda caches, and checkpoints. Moving `HF_HOME` out of the vhdx is the single biggest win — that's the next post.
 
 ---
 
-_Measured on my own machine on 2026-08-05. Commands are destructive-adjacent (diskpart) — double-check the vdisk path before running._
+_Everything above was measured on my own machine on 2026-08-06; timestamps and sizes are from the actual run. If you get different behavior on another WSL version, I want to know — see [Contact](/contact/)._
