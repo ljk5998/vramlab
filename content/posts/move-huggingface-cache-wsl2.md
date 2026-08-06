@@ -2,7 +2,6 @@
 title: "Hugging Face Cache on WSL2: HF_HOME, /mnt/c, and Cleanup"
 date: 2026-08-07
 lastmod: 2026-08-07
-draft: true
 tags: ["huggingface", "wsl2", "disk-space", "cache"]
 images: ["/images/og-hf-cache-wsl2.png"]
 description: "I tested HF_HOME, HF_HUB_CACHE, symlinks, and /mnt/c on WSL2, then measured cleanup behavior with the current hf cache commands."
