@@ -6,13 +6,17 @@
 
 /* --- 벤치마크 표: 이 블로그의 핵심 컴포넌트 --- */
 
-/* 표가 화면보다 넓으면 표만 가로 스크롤 (모바일 필수) */
+/* 표가 화면보다 넓으면 표만 가로 스크롤 (모바일 안전판).
+   셀 내용은 기본적으로 줄바꿈 허용 — nowrap을 걸면 데스크톱에서도
+   불필요한 가로 스크롤이 생기고 모바일에서 핵심 열이 가려진다 (글 2 검수에서 확인) */
 .post-content table {
   display: block;
   max-width: 100%;
   overflow-x: auto;
-  white-space: nowrap;
   font-size: 0.92em;
+}
+.post-content table code {
+  white-space: nowrap; /* 코드 조각만 줄바꿈 금지 (명령이 중간에 꺾이면 오독) */
 }
 
 /* 줄무늬 + 헤더 강조 */

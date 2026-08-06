@@ -103,18 +103,20 @@ A symlink works too: I pointed the cache path at a symlinked directory and every
 
 ## Where to put it: ext4 vs /mnt/c, measured
 
-Separate question from *how* to move: *where to*. The method (env var vs symlink) did not affect performance. The target filesystem did.
+Separate question from *how* to move: *where to*. On the three end-to-end metrics below, the symlink path matched direct ext4 within 1% — the raw-read runs were too noisy to judge either way. What moved the numbers was the target filesystem.
 
 The tempting move on WSL2 is "my C: is full, I'll put the cache on the Windows side" — `/mnt/c` or `/mnt/d`. That path goes through the 9p/drvfs protocol layer, and people have hit it before: this [forum question about using `/mnt` as cache dir](https://discuss.huggingface.co/t/cant-use-mnt-drive-letter-cache-as-cache-dir/28417) sat unanswered for four years.
 
 Cold-cache numbers, five runs per cell, same physical SSD (individual values in the [log](/logs/hf-cache-experiments-20260806.txt)):
 
-| Cold, N=5 median | ext4 (inside WSL) | ext4 via symlink | `/mnt/c` (9p) |
+| Cold, N=5 median | ext4 | ext4, symlink | `/mnt/c` (9p) |
 |---|---|---|---|
-| Sequential read, 943 MB safetensors (`dd`) | **0.64 s** | 0.84 s † | **4.95 s (≈7.7×)** |
-| `AutoTokenizer` load | 2.68 s | 2.74 s | 3.30 s (+23%) |
-| `AutoModelForCausalLM` load, CPU | 5.83 s | 5.83 s | 5.99 s (**+3%**) |
-| Model load **+ one forward pass** | 7.67 s | 7.71 s | **11.06 s (+44%)** |
+| `dd` read (943 MB) | **0.64 s** | 0.84 s † | **4.95 s (≈7.7×)** |
+| Tokenizer load | 2.68 s | 2.74 s | 3.30 s (+23%) |
+| Model load (CPU, mmap) | 5.83 s | 5.83 s | 5.99 s (**+3%**) |
+| **Load + first forward** | 7.67 s | 7.71 s | **11.06 s (+44%)** |
+
+The four rows: a sequential read of the 943 MB safetensors file with `dd`, a cold `AutoTokenizer.from_pretrained`, a cold `AutoModelForCausalLM.from_pretrained` on CPU, and the same load followed by one forward pass.
 
 † raw-read runs through the symlink varied widely (0.58–1.01 s vs 0.59–0.68 s direct) — too noisy to judge from this sample; on the three realistic metrics the symlink matched the direct path within 1%.
 
@@ -122,7 +124,7 @@ Cold-cache numbers, five runs per cell, same physical SSD (individual values in 
 
 This table tells a sneakier story than one number would. The raw pipe to `/mnt/c` is **about 7.7× slower** on this metric (~198 MB/s effective vs ~1.5 GB/s). Yet the full `from_pretrained` barely moves: +3%. The cost did not vanish — safetensors on CPU memory-maps the weights, so "loading the model" reads structure and metadata, not the 943 MB. The bytes are pulled when something actually touches them. Add a single forward pass and the bill arrives: **+44% (+3.4 s) on `/mnt/c`**, right where the deferred reads happen.
 
-So the accurate conclusion is not "never touch /mnt/c", and it is also not "from_pretrained looks fine, so 9p is fine". It is: **if repeated model loading and inference matter to you, don't put the weights on `/mnt` — and don't let a fast load time fool you, because the slowdown surfaces at first inference.** Anything that reads the file eagerly and fully (checksums, copies, `hf cache verify`) pays the full ~7.7×. I did not measure GPU loading here.
+So the accurate conclusion is not "never touch /mnt/c", and it is also not "from_pretrained looks fine, so 9p is fine". It is: **if repeated model loading and inference matter to you, don't put the weights on `/mnt` — and don't let a fast load time fool you, because the slowdown surfaces at first inference.** Operations that read the file eagerly and fully (checksums, copies, `hf cache verify`) are exposed to more of the same read penalty; the case I measured is the sequential read, at about 7.7×. I did not benchmark each operation separately, nor GPU loading.
 
 Also note what moving within ext4 does *not* do: it frees nothing on the Windows side. The cache still lives inside `ext4.vhdx`, same drive, same file. If your actual problem is C: running out of space, jump to [the last section](#why-your-windows-disk-is-still-full).
 

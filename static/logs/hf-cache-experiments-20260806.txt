@@ -1,3 +1,18 @@
+# READING NOTES (added before publish)
+# - This is the raw session log: ANSI color codes and progress-bar output are left as-is.
+# - In the first "E3 locations" section, every verify timing reads "verify-failed" — that was a
+#   timing-capture bug in my harness (output redirected away), not a verify failure. The "E3b" section
+#   re-runs the diagnosis and shows `hf cache verify` passing. Ignore the first E3 timings entirely.
+# - Sections that feed the article tables:
+#     env-var matrix table   <- "E2: env var combination matrix"
+#     benchmark, dd+tokenizer<- "E3c: N=5 benchmark" (individual runs)
+#     benchmark, model load  <- "E3d: full model load"
+#     benchmark, load+forward<- "E3e: load + first forward pass"
+#     cleanup workflow       <- "E4"/"E4b"
+#     revision dedup         <- "E1b" (inside E3c section)
+# - vhdx sizes (the "still 5.11 GB" table) were measured host-side with PowerShell
+#   (logical size + allocated size via GetCompressedFileSizeW); they are summarized in the article.
+
 # HF cache experiments - session logs (2026-08-06)
 # Host: Windows 11 build 26200 / WSL 2.7.3.0 / Ubuntu 26.04 / hub 1.26.0 / transformers 5.14.1
 # Single Samsung NVMe (MZVL2512): C: and ext4.vhdx on the same physical disk. AC power, balanced plan.
@@ -42,8 +57,12 @@ E2 DONE
 ################ E1/E3/E4: structure, locations, cleanup ################
 === E1 structure run 2026-08-05T17:40:12Z ===
 --- download (network) ---
-Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 10 files:  10%|█         | 1/10 [00:00<00:02,  4.42it/s]Fetching 10 files:  80%|████████  | 8/10 [00:00<00:00, 20.68it/s]Fetching 10 files: 100%|██████████| 10/10 [00:14<00:00,  1.47s/it]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 10 files:  10%|█         | 1/10 [00:00<00:02,  4.42it/s]
+Fetching 10 files:  80%|████████  | 8/10 [00:00<00:00, 20.68it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:14<00:00,  1.47s/it]
 [32m✓ Downloaded[0m
   path: /home/ljk5998/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775
 download_wall=16.22 s
@@ -298,9 +317,19 @@ C_mnt_c tokenizer run5 = 3.18s
 === E1b: revision 간 blob dedup 검증 ===
 총 커밋 수: 9
 revision A(최신): 71034c5d8bde / B(직전): 914a3832e3d8
-Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:  10%|█         | 1/10 [00:00<00:01,  4.53it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 10 files:  60%|██████    | 6/10 [00:00<00:00, 14.58it/s]Fetching 10 files:  80%|████████  | 8/10 [00:02<00:00,  3.24it/s]Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.11it/s]Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.45it/s]
-Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:  30%|███       | 3/10 [00:00<00:00,  7.61it/s]Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.71it/s]Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.87it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files:  10%|█         | 1/10 [00:00<00:01,  4.53it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 10 files:  60%|██████    | 6/10 [00:00<00:00, 14.58it/s]
+Fetching 10 files:  80%|████████  | 8/10 [00:02<00:00,  3.24it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.11it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.45it/s]
+
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]
+Fetching 10 files:  30%|███       | 3/10 [00:00<00:00,  7.61it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.71it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:02<00:00,  4.87it/s]
 revision A 파일 9개, blobs=10
 revision B 파일 9개 추가 후 blobs=11
 → 파일 합계 18, blob 11: 공유 blob 7개 (0보다 크면 revision 간 dedup 실증)
