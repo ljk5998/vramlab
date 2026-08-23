@@ -37,6 +37,23 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* HTML width/height attributes reserve space, while height:auto preserves
+   the source aspect ratio when a content image is narrower than its width. */
+.post-content img {
+  height: auto;
+}
+
+/* 열이 많은 행렬 도표는 모바일에서 글자를 뭉개지 않고 도표만 스크롤한다. */
+@media (max-width: 760px) {
+  .post-content figure.core-matrix {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .post-content figure.core-matrix img {
+    min-width: 720px;
+  }
+}
+
 /* --- 측정 조건 박스: 모든 벤치마크 글 상단에 쓰는 환경 명시 블록 ---
    사용법(마크다운에서):
    <div class="lab-conditions">

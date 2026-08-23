@@ -21,7 +21,7 @@ outputs:
 
 params:
   env: production
-  description: "AI experiments on the hardware students actually have — a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs. Real measurements, no estimates."
+  description: "AI experiments on hardware students actually have — an 8 GB desktop GPU, a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs. Real measurements, no estimates."
   keywords: [local llm, vram, benchmark, cuda, wsl2, mlx, kaggle, low vram]
   author: Sinhyeok Lee
   images: ["/images/og-default.png"] # 사이트 기본 og:image (글별 images 파라미터가 우선)
@@ -50,7 +50,7 @@ params:
   homeInfoParams:
     Title: "VRAM Lab"
     Content: >
-      Real measurements from memory-constrained AI hardware —
+      Real measurements from memory-constrained AI hardware — an 8 GB desktop GPU,
       a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs.
       Every number on this site was measured on real hardware, with logs to prove it.
 

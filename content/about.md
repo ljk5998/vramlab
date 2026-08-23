@@ -14,6 +14,7 @@ I write here under the name **Sinhyeok Lee**. I run machine-learning experiments
 
 ## The lab equipment
 
+- **RTX 5060 Ti (8 GB VRAM)** — Windows 11 + WSL2, a consumer Blackwell desktop GPU
 - **RTX 3060 Laptop GPU (6 GB VRAM)** — Windows 11 + WSL2, the classic "gaming laptop doing ML" setup
 - **MacBook Air M4 (16 GB unified memory)** — fanless Apple Silicon
 - **Free cloud GPUs** — Kaggle T4 ×2, Google Colab
