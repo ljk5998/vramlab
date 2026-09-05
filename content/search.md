@@ -7,4 +7,7 @@ placeholder: "Search posts…"
 showToc: false
 ShowReadingTime: false
 ShowBreadCrumbs: false
+robotsNoIndex: true
+sitemap:
+  disable: true
 ---

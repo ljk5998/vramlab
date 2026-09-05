@@ -19,12 +19,29 @@ outputs:
     - RSS
     - JSON # required for PaperMod search page
 
+# Keep tag/category navigation crawlable, but promote the curated topic pages
+# instead of thin generated archives in search results and the XML sitemap.
+cascade:
+  - target:
+      kind: taxonomy
+    params:
+      robotsNoIndex: true
+    sitemap:
+      disable: true
+  - target:
+      kind: term
+    params:
+      robotsNoIndex: true
+    sitemap:
+      disable: true
+
 params:
   env: production
-  description: "AI experiments on hardware students actually have — an 8 GB desktop GPU, a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs. Real measurements, no estimates."
-  keywords: [local llm, vram, benchmark, cuda, wsl2, mlx, kaggle, low vram]
+  description: "Tested fixes and reproducible benchmarks for local AI on Windows, WSL2, and consumer GPUs. Exact versions, commands, measurements, and logs."
+  keywords: [local ai, local llm, vram, benchmark, cuda, wsl2, low vram]
+  mainSections: [posts]
   author: Sinhyeok Lee
-  images: ["/images/og-default.png"] # 사이트 기본 og:image (글별 images 파라미터가 우선)
+  images: ["/images/og-local-ai.png"] # 사이트 기본 og:image (글별 images 파라미터가 우선)
   cloudflareAnalyticsToken: "99f4e9ccd1b6474480e67720156ca0da" # Cloudflare Web Analytics (쿠키리스, production 빌드에만 삽입)
 
   assets:
@@ -48,11 +65,12 @@ params:
   ShowFullTextinRSS: false
 
   homeInfoParams:
-    Title: "VRAM Lab"
-    Content: >
-      Real measurements from memory-constrained AI hardware — an 8 GB desktop GPU,
-      a 6 GB laptop GPU, a 16 GB MacBook Air, and free cloud GPUs.
-      Every number on this site was measured on real hardware, with logs to prove it.
+    Title: "Local AI, tested on consumer hardware"
+    Content: |
+      Windows and WSL2 fixes, CUDA compatibility checks, and 8 GB inference experiments.
+      Each report includes the tested versions, commands, results, and a session log.
+
+      [Start with your problem](/start-here/) · [Browse all reports](/posts/)
 
   socialIcons:
     - name: github
@@ -68,22 +86,30 @@ params:
 
 menu:
   main:
-    - identifier: posts
-      name: Posts
-      url: /posts/
+    - identifier: start-here
+      name: Start here
+      url: /start-here/
       weight: 10
-    - identifier: tags
-      name: Tags
-      url: /tags/
+    - identifier: fixes
+      name: Fixes
+      url: /fixes/
       weight: 20
+    - identifier: compatibility
+      name: Compatibility
+      url: /compatibility/
+      weight: 30
+    - identifier: benchmarks
+      name: Benchmarks
+      url: /benchmarks/
+      weight: 40
     - identifier: search
       name: Search
       url: /search/
-      weight: 30
+      weight: 50
     - identifier: about
       name: About
       url: /about/
-      weight: 40
+      weight: 60
 
 markup:
   goldmark:

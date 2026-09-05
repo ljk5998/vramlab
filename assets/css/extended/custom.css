@@ -6,6 +6,23 @@
 
 /* --- 벤치마크 표: 이 블로그의 핵심 컴포넌트 --- */
 
+/* Keep every navigation destination visible on narrow screens. */
+@media (max-width: 760px) {
+  .header-nav .menu {
+    flex-wrap: wrap;
+    white-space: normal;
+    overflow-x: visible;
+    line-height: 1.4;
+    column-gap: 18px;
+    padding-bottom: 8px;
+  }
+  .header-nav .menu a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 /* 표가 화면보다 넓으면 표만 가로 스크롤 (모바일 안전판).
    셀 내용은 기본적으로 줄바꿈 허용 — nowrap을 걸면 데스크톱에서도
    불필요한 가로 스크롤이 생기고 모바일에서 핵심 열이 가려진다 (글 2 검수에서 확인) */

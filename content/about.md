@@ -3,27 +3,30 @@ title: "About"
 layout: "single"
 url: "/about/"
 summary: "About VRAM Lab"
+description: "How VRAM Lab tests local AI on Windows, WSL2, and consumer GPUs: versioned experiments, measured results, and published session logs."
 showToc: false
 ShowReadingTime: false
 ShowBreadCrumbs: false
 ---
 
-**VRAM Lab** publishes real measurements from the hardware most students and hobbyists actually have — not the hardware cloud vendors wish you rented.
+**VRAM Lab** tests local AI on Windows, WSL2, and consumer GPUs. The reports cover the steps between a full disk, a working CUDA environment, and a model that runs within limited VRAM.
 
-I write here under the name **Sinhyeok Lee**. I run machine-learning experiments on memory-constrained hardware daily, and this site is where the environment-wrangling notes and measurement logs become searchable — so the next person hitting the same error spends five minutes instead of five hours.
+I write under the name **Sinhyeok Lee**. I turn environment problems and hardware experiments into reproducible reports: what I ran, what failed, what changed, and how I checked the result. [Start here](/start-here/) to find the report that matches your problem.
 
-## The lab equipment
+## Hardware in the published reports
 
 - **RTX 5060 Ti (8 GB VRAM)** — Windows 11 + WSL2, a consumer Blackwell desktop GPU
-- **RTX 3060 Laptop GPU (6 GB VRAM)** — Windows 11 + WSL2, the classic "gaming laptop doing ML" setup
-- **MacBook Air M4 (16 GB unified memory)** — fanless Apple Silicon
-- **Free cloud GPUs** — Kaggle T4 ×2, Google Colab
+- **RTX 3060 Laptop GPU (6 GB VRAM)** — Windows 11 + WSL2
+
+The storage reports also record the host disk, filesystem, WSL version, and guest distribution. Results from one machine or version do not establish behavior on every Windows or Linux system.
 
 ## How measurements are done
 
-Every number on this site was measured by me, on the hardware above. Each benchmark post states the exact versions, commands, and power conditions it ran under, and publishes the raw session log alongside the numbers. When something does **not** fit or run, that negative result gets published too — knowing where the wall is matters more than marketing numbers.
+Each experiment identifies its tested environment and publishes a session log alongside the results. Performance reports state the measurement conditions and the samples used. Public logs remove credentials and private paths; the article explains any exclusions or follow-up corrections that affect its claims.
 
-Behavior on this stack is version-dependent. Posts state the version they were verified on, and get an "Updated" note when re-measured.
+A successful GPU check, a completed computation, and a useful performance result answer different questions. I keep those distinctions in the reports. Failed attempts and results that contradict the starting hypothesis are part of the evidence.
+
+Behavior on this stack is version-dependent. Posts state the version they were verified on and receive a visible update note when re-measured. Official documentation and source-code explanations are linked separately from observations made in the lab.
 
 ## Disclosure
 

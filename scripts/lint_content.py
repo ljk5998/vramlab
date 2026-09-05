@@ -4,7 +4,7 @@
 검사 항목:
   1. posts front matter: title(<=70자 권고)·date·lastmod·description(10~160자)·tags 필수
   2. 발행 글(draft 아님)에 TODO/CHANGEME/FIXME/PLACEHOLDER 마커가 남아 있으면 실패 (초안 유출 방지)
-  3. front matter images 경로와 본문에서 참조하는 /images/, /logs/ 파일이 static/에 실재하는지
+  3. front matter images 경로와 본문에서 참조하는 /images/, /logs/, /data/, /code/ 파일이 static/에 실재하는지
   4. 브랜딩 필수 자산(favicon 등) 존재
 종료 코드: 실패 있으면 1.
 """
@@ -20,7 +20,7 @@ STATIC = ROOT / "static"
 
 REQUIRED_ASSETS = [
     "favicon.ico", "favicon-16x16.png", "favicon-32x32.png",
-    "apple-touch-icon.png", "safari-pinned-tab.svg", "images/og-default.png",
+    "apple-touch-icon.png", "safari-pinned-tab.svg", "images/og-default.png", "images/og-local-ai.png",
 ]
 LEAK_MARKERS = re.compile(r"\b(TODO|CHANGEME|FIXME|PLACEHOLDER)\b")
 
@@ -65,8 +65,8 @@ for post in sorted(POSTS.glob("*.md")):
             warnings.append(f"{rel}: 'images'(OG 카드) 없음 — 사이트 기본 카드로 대체됨")
 
     refs = list(fm.get("images") or [])
-    refs += re.findall(r"\]\((/(?:images|logs)/[^)#?\s]+)\)", body)
-    refs += re.findall(r'src="(/(?:images|logs)/[^"#?\s]+)"', body)
+    refs += re.findall(r"\]\((/(?:images|logs|data|code)/[^)#?\s]+)\)", body)
+    refs += re.findall(r'src="(/(?:images|logs|data|code)/[^"#?\s]+)"', body)
     for ref in refs:
         if not (STATIC / ref.lstrip("/")).is_file():
             errors.append(f"{rel}: 참조 파일 없음 {ref}")

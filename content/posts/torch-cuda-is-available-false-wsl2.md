@@ -256,6 +256,8 @@ The final validator found all 21 expected JSON files, no unexpected probe files,
 
 ## Scope and limitations
 
+For a different failure stage, the [RTX 5060 Ti wheel matrix](/posts/pytorch-2-13-rtx-5060-ti-cuda-wheels/) tests actual kernels after GPU detection succeeds. The [compatibility index](/compatibility/) separates these checks and their tested hardware.
+
 - One Windows host, one RTX 3060 Laptop GPU, driver 572.60, WSL 2.7.3.0, and one disposable Ubuntu 24.04 distro.
 - Three fresh Python processes per condition, but one host and one installed environment per wheel. This is repeatability on one machine, not three independent systems.
 - The PyPI default is platform- and date-dependent. This run resolved to `2.13.0+cu130` on Linux x86-64/CPython 3.12 on 2026-08-17.

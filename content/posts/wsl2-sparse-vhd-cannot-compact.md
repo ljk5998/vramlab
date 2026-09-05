@@ -176,7 +176,7 @@ My recommendations, in order:
 1. **Stay non-sparse** (the default). When the vhdx gets fat, run `wsl --shutdown` then the diskpart script above. On WSL 2.7+ you can skip fstrim — `discard` is already in the mount options.
 2. **Don't force `--allow-unsafe` sparse** on a distro you care about. Microsoft gated it for corruption risk; the auto-reclaim is nice but not worth your conda environments.
 3. **If you already have sparse enabled** and the file "won't shrink": check *size on disk* first — it probably already shrank. The logical size is cosmetic until you convert back (Finding 5).
-4. **Prevent the bloat instead**: the usual suspects are Hugging Face caches, pip/conda caches, and checkpoints. Moving `HF_HOME` out of the vhdx is the single biggest win — that's the next post.
+4. **Check what is using the space**: the usual suspects are Hugging Face caches, pip/conda caches, and checkpoints. The [Hub cache experiment](/posts/move-huggingface-cache-wsl2/) measures cache placement and the cost of using `/mnt/c`; the [Datasets cache follow-up](/posts/hf-datasets-cache-wsl2/) distinguishes downloaded sources from generated Arrow files. Moving a directory within the same VHDX does not reclaim Windows disk space.
 
 ---
 

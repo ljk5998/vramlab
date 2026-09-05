@@ -231,6 +231,8 @@ Do not mix scheduler-debug timing into the performance table. Also verify the ac
 
 ## Scope and limitations
 
+The [benchmark index](/benchmarks/) links this dispatch experiment with the model-loading and storage measurements. For Python workloads on the same GPU family, the [PyTorch wheel matrix](/posts/pytorch-2-13-rtx-5060-ti-cuda-wheels/) covers a separate compatibility layer; PyTorch is not a prerequisite for the llama.cpp build tested here.
+
 - One RTX 5060 Ti, one Windows/WSL host, one driver, one llama.cpp commit, and one Qwen3 1.7B GGUF were tested. Native Windows, native Linux, other GPUs, later commits, and multi-GPU were not.
 - llama-bench uses synthetic tokens and excludes tokenization and sampling. This is a kernel/backend and throughput experiment, not an end-to-end chat benchmark.
 - There is no model-quality comparison between F16, symmetric quantized, and asymmetric quantized caches.

@@ -169,7 +169,7 @@ That `freed 12.5M` removed `model/hf-internal-testing/tiny-random-gpt2` — one 
 | Xet metadata | `$HF_HOME/xet` | manual (small by default — 92 KB here) |
 | Datasets' Arrow cache | `$HF_HOME/datasets` (`HF_DATASETS_CACHE`) | [datasets' own cleanup](https://huggingface.co/docs/datasets/main/cache) or manual |
 
-If you process datasets, the Arrow cache is often the real disk hog, and no `hf cache` command will show it to you.
+If you process datasets, the Arrow cache can occupy space outside the Hub CLI's view. The follow-up [HF_DATASETS_CACHE experiment](/posts/hf-datasets-cache-wsl2/) measures raw Hub CSVs versus generated Arrow, import-time settings, saved-dataset transforms, and what each cleanup command removes on the newer tested stack.
 
 ## Why your Windows disk is still full
 

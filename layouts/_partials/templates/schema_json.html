@@ -59,7 +59,7 @@
   ]
 }
 </script>
-{{- if .IsPage }}
+{{- if and .IsPage (eq .Type "posts") }}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
