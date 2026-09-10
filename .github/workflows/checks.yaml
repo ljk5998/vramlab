@@ -33,6 +33,8 @@ jobs:
           python3 scripts/lint_content.py
       - name: Production build (초안 제외)
         run: hugo --minify --baseURL "https://vramlab.com/"
+      - name: Production design and SEO checks
+        run: python3 scripts/check_production.py public
       - name: Draft leak check (빌드 결과에 draft 글이 없는지)
         run: |
           python3 - << 'EOF'

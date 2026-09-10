@@ -1,0 +1,16 @@
+{{ define "main" }}
+{{ $isReport := eq .Section "posts" }}
+<article class="report-page">
+  <header class="article-heading"><a class="back-link" href="{{ if $isReport }}{{ "/posts/" | relURL }}{{ else }}{{ "/" | relURL }}{{ end }}">← {{ if $isReport }}The notebook{{ else }}VRAM Lab{{ end }}</a><p class="eyebrow">{{ if $isReport }}FIELD REPORT / {{ .Date.Format "02 Jan 2006" | upper }}{{ else }}INSIDE THE LAB{{ end }}</p><h1>{{ .Title }}</h1>{{ with .Description }}<p class="article-description">{{ . }}</p>{{ end }}{{ if $isReport }}<div class="article-meta"><span>Sinhyeok Lee</span><span>{{ .ReadingTime }} min read</span><span>Versions and conditions in the report</span></div>{{ end }}</header>
+  <div class="article-layout">
+    <aside class="article-aside">{{ if $isReport }}<p class="eyebrow">IN THIS REPORT</p>{{ .TableOfContents }}{{ else }}<p class="eyebrow">EXPLORE</p><nav><a href="{{ "/start-here/" | relURL }}">Start here</a><a href="{{ "/fixes/" | relURL }}">Fixes</a><a href="{{ "/compatibility/" | relURL }}">Compatibility</a><a href="{{ "/benchmarks/" | relURL }}">Measurements</a></nav>{{ end }}</aside>
+    <div class="article-body">
+      {{ if eq .File.ContentBaseName "hf-datasets-cache-wsl2" }}
+      <section class="article-visual" aria-labelledby="cache-visual-title"><div><p class="eyebrow">VISUAL FIELD NOTE / ARCHIFY</p><h2 id="cache-visual-title">Follow the files.</h2><p>Downloaded source files and prepared Arrow files have separate destinations.</p></div><a class="button button-outline" href="{{ "lab/diagrams/dataset-cache.html" | relURL }}">Open the cache map ↗</a><details><summary>View the interactive diagram <span>(Korean annotations)</span></summary><iframe loading="lazy" title="Archify: WSL2 dataset cache file destinations, Korean annotations" src="{{ "lab/diagrams/dataset-cache.html" | relURL }}" sandbox="allow-scripts allow-same-origin allow-downloads"></iframe><p class="diagram-caption">Based on this report's pinned datasets 5.0.1 experiment. The diagram is explanatory, not an additional measurement. Archify viewer controls are in English.</p></details></section>
+      {{ end }}
+      <div class="post-content">{{ .Content }}</div>
+      {{ if $isReport }}<footer class="article-end"><p class="eyebrow">END OF FIELD REPORT</p><p>Read the conditions before applying a result to another setup.</p><a class="quiet-link" href="{{ "/posts/" | relURL }}">Back to all experiments ↗</a></footer>{{ end }}
+    </div>
+  </div>
+</article>
+{{ end }}

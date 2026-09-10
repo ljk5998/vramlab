@@ -1,0 +1,7 @@
+# Opt-in review mode: same design, with a preview notice and indexing disabled.
+theme: [LabDraft, PaperMod]
+publishDir: .draft-build
+params:
+  labDraft: true
+  cloudflareAnalyticsToken: ""
+  description: "Local AI experiments on the hardware at hand. File paths, memory, compatibility, and reproducible results."

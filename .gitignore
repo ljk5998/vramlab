@@ -6,3 +6,8 @@ resources/_gen/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local-only design tooling and validation output
+.local-tools/
+.draft-build/
+.draft-checks/

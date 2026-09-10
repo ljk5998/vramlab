@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ if site.Params.labDraft }}
+  <meta name="robots" content="noindex, nofollow">
+  {{ else if or .Params.robotsNoIndex (eq .Kind "404") }}
+  <meta name="robots" content="noindex, follow">
+  {{ else }}
+  <meta name="robots" content="index, follow">
+  {{ end }}
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#101213">
+  <title>{{ if not .IsHome }}{{ .Title }} · {{ end }}VRAM Lab{{ if site.Params.labDraft }} — Design draft{{ end }}</title>
+  <meta name="description" content="{{ .Description | default site.Params.description }}">
+  <meta name="author" content="Sinhyeok Lee">
+  <link rel="canonical" href="{{ printf "https://vramlab.com%s" .RelPermalink }}">
+  <link rel="icon" href="{{ "favicon.ico" | relURL }}">
+  {{ range .AlternativeOutputFormats }}<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .RelPermalink }}" title="{{ .Name }}">{{ end }}
+  {{ $style := resources.Get "lab/lab.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+  {{ $code := resources.Get "css/includes/chroma-styles.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $code.RelPermalink }}" integrity="{{ $code.Data.Integrity }}">
+  {{ $app := resources.Get "lab/lab.js" | minify | fingerprint }}
+  <script defer src="{{ $app.RelPermalink }}" integrity="{{ $app.Data.Integrity }}"></script>
+  {{ if .IsHome }}<script type="module" src="{{ "lab/scene.js" | relURL }}"></script>{{ end }}
+  {{ if eq .Layout "search" }}
+    {{ $fast := resources.Get "js/fastsearch.js" | js.Build (dict "params" (dict "fuseOpts" site.Params.fuseOpts)) | minify }}
+    {{ $fuse := resources.Get "js/fuse.basic.min.js" }}
+    {{ $search := slice $fuse $fast | resources.Concat "lab/search.js" | fingerprint }}
+    <script defer src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}"></script>
+  {{ end }}
+  {{ partial "templates/opengraph.html" . }}
+  {{ partial "templates/twitter_cards.html" . }}
+  {{ partial "templates/schema_json.html" . }}
+  {{ if not site.Params.labDraft }}{{ partial "extend_head.html" . }}{{ end }}
+</head>
+<body id="top" class="{{ if .IsHome }}is-home{{ else }}is-inner{{ end }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{ if site.Params.labDraft }}<div class="draft-notice">DESIGN STUDY 01 <span>Local preview · published reports unchanged</span></div>{{ end }}
+  <header class="site-header shell">
+    <a class="brand" href="{{ "/" | relURL }}" aria-label="VRAM Lab home"><span class="brand-mark" aria-hidden="true">V<span>/</span></span><span>VRAM<span class="brand-light">LAB</span><small>INDEPENDENT FIELD NOTES</small></span></a>
+    <nav aria-label="Main navigation" class="main-nav">
+      <a href="{{ "/posts/" | relURL }}" {{ if eq .Section "posts" }}aria-current="page"{{ end }}>Experiments</a>
+      <a href="{{ "/start-here/" | relURL }}">Start here</a>
+      <a href="{{ "/compatibility/" | relURL }}">Compatibility</a>
+      <a href="{{ "/about/" | relURL }}">About</a>
+      <a class="search-link" href="{{ "/search/" | relURL }}" aria-label="Search reports"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><span>Search</span></a>
+    </nav>
+    <button class="theme-button" type="button" aria-label="Switch to light theme" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></button>
+  </header>
+  <main id="main" class="shell" tabindex="-1">{{ block "main" . }}{{ end }}</main>
+  <footer class="site-footer shell">
+    <div><a class="footer-brand" href="{{ "/" | relURL }}">VRAM LAB<span> / </span></a><p>Local hardware. Documented limits.</p></div>
+    <nav aria-label="Footer navigation"><a href="{{ "/fixes/" | relURL }}">Fixes</a><a href="{{ "/benchmarks/" | relURL }}">Measurements</a><a href="{{ "/index.xml" | relURL }}">RSS</a><a href="https://github.com/ljk5998/vramlab">Source</a><a href="{{ "/contact/" | relURL }}">Contact</a><a href="{{ "/privacy-policy/" | relURL }}">Privacy</a></nav>
+    <small>© {{ now.Year }} Sinhyeok Lee</small>
+  </footer>
+</body>
+</html>

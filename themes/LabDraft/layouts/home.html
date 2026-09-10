@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{ $reports := where site.RegularPages "Section" "posts" }}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="rule"></span> LOCAL AI · INDEPENDENT EXPERIMENTS</p>
+    <h1 id="hero-title">Small hardware.<br><em>Deep experiments.</em></h1>
+    <p class="hero-description">What can the hardware on my desk actually do?<br> Experiments in file paths, memory, and compatibility.<br> Tested conditions. Commands you can repeat.</p>
+    <div class="hero-actions"><a class="button button-primary" href="#experiments">Explore the experiments <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#workbench">Inside the lab <span aria-hidden="true">↘</span></a></div>
+    <div class="hero-footnote"><span>{{ printf "%02d" (len $reports) }} REPORTS</span><span>WINDOWS / WSL2</span><span>CONSUMER HARDWARE</span></div>
+  </div>
+  <figure class="scene-panel" aria-labelledby="scene-caption">
+    <div class="scene-top"><span>STUDY 01 / LAYERS</span><span>CONCEPTUAL 3D</span></div>
+    <div class="scene-stage" id="lab-scene">
+      <div class="scene-fallback"><span class="fallback-word">COMPUTE</span><span class="fallback-word">MEMORY</span><span class="fallback-word">STORAGE</span><p>The layers behind a local AI experiment.</p></div>
+    </div>
+    <div class="scene-bottom"><figcaption id="scene-caption">A study in layers.<br><span>Not a hardware model or live measurement.</span></figcaption><div class="scene-controls" hidden><button type="button" id="scene-layout" aria-pressed="true">Assemble</button><button type="button" id="scene-motion" aria-pressed="false">Pause</button></div></div>
+  </figure>
+</section>
+
+<section class="selected-section" id="experiments" aria-labelledby="experiments-title">
+  <header class="section-heading"><div><p class="eyebrow">01 / THE NOTEBOOK</p><h2 id="experiments-title">Follow the question.</h2></div><a class="quiet-link" href="{{ "/posts/" | relURL }}">All {{ len $reports }} reports <span aria-hidden="true">↗</span></a></header>
+  <div class="experiment-grid">
+    {{ with site.GetPage "/posts/hf-datasets-cache-wsl2" }}
+    <article class="experiment-card featured-card">
+      <div class="card-copy"><div class="card-meta"><span class="tag">FILE PATHS</span><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" | upper }}</time></div><h3><a href="{{ .RelPermalink }}">One dataset.<br>Two cache roots.</a></h3><p>Changing <code>HF_DATASETS_CACHE</code> changed the destination of newly prepared Arrow files—not the downloaded CSVs.</p><div class="card-bottom"><span>17 conditions × 3 runs</span><a href="{{ .RelPermalink }}" aria-label="Read the HF Datasets cache experiment">Read the experiment <span aria-hidden="true">↗</span></a></div></div>
+      <div class="file-study"><div class="study-caption">OBSERVED FILE LOCATIONS <span>WSL2</span></div><div class="file-row"><span class="file-extension">CSV</span><div><span>DOWNLOADED SOURCE</span><code>HF_HOME/hub</code></div></div><div class="file-row"><span class="file-extension arrow-file">ARROW</span><div><span>PREPARED DATA</span><code>HF_DATASETS_CACHE</code></div></div><p>Changing a variable does not move existing files.</p><a href="{{ "lab/diagrams/dataset-cache.html" | relURL }}" class="diagram-link">Explore the cache map <span>ARCHIFY ↗</span></a></div>
+    </article>
+    {{ end }}
+
+    {{ with site.GetPage "/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti" }}
+    <article class="experiment-card"><div class="card-meta"><span class="tag">MEMORY & EXECUTION</span><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" | upper }}</time></div><h3><a href="{{ .RelPermalink }}">A CUDA buffer.<br>CPU attention.</a></h3><p>The same mixed KV cache took different execution paths with one build flag changed.</p>
+      <figure class="measurement" aria-label="Prompt-processing medians at 4096 tokens: default build 132.415 tokens per second; all-quants build 11412 tokens per second."><figcaption>4K PROMPT PROCESSING <span>tokens/s</span></figcaption><div class="bar-label"><span>Default build</span><strong>132.415</strong></div><div class="bar-track"><span style="--value:1.1602997%"></span></div><div class="bar-label"><span>All-quants build</span><strong>11,412</strong></div><div class="bar-track"><span style="--value:100%"></span></div><div class="chart-axis"><span>0</span><span>11,412</span></div><p>RTX 5060 Ti · Qwen3 1.7B Q4_K_M · q8_0/q4_0<br>llama.cpp f280b2698 · median of 3 selected samples</p></figure>
+      <div class="card-bottom"><span>One GPU. Two builds.</span><a href="{{ .RelPermalink }}" aria-label="Read the mixed KV cache experiment">Read report <span aria-hidden="true">↗</span></a></div>
+    </article>
+    {{ end }}
+
+    {{ with site.GetPage "/posts/pytorch-2-13-rtx-5060-ti-cuda-wheels" }}
+    <article class="experiment-card"><div class="card-meta"><span class="tag">COMPATIBILITY</span><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" | upper }}</time></div><h3><a href="{{ .RelPermalink }}">Detected isn't<br>the same as working.</a></h3><p>Three PyTorch wheels detected the GPU. Actual operations told a different story.</p>
+      <div class="compat-study"><table><caption>PyTorch 2.13.0 · RTX 5060 Ti · WSL2</caption><thead><tr><th scope="col">Wheel</th><th scope="col">Detected</th><th scope="col"><code>fill_</code></th></tr></thead><tbody><tr><th scope="row">cu126</th><td>3/3</td><td class="result-fail">0/3</td></tr><tr><th scope="row">cu130</th><td>3/3</td><td>3/3</td></tr><tr><th scope="row">cu132</th><td>3/3</td><td>3/3</td></tr></tbody></table><p>Completed probes / 3 fresh processes. Not a general compatibility score.</p></div>
+      <div class="card-bottom"><span>Check the operation.</span><a href="{{ .RelPermalink }}" aria-label="Read the PyTorch wheel compatibility experiment">Read report <span aria-hidden="true">↗</span></a></div>
+    </article>
+    {{ end }}
+  </div>
+</section>
+
+<section class="method-section" aria-labelledby="method-title"><div><p class="eyebrow">02 / THE METHOD</p><h2 id="method-title">The result matters.<br>So does the route.</h2><p>Each report keeps the environment, commands, evidence, and limits together.</p><a class="quiet-link" href="{{ "/start-here/" | relURL }}">Find your starting point <span aria-hidden="true">↗</span></a></div><ol class="method-list"><li><span>01</span><div><h3>Pin the conditions.</h3><p>Hardware, versions, revisions, and the question being tested.</p></div></li><li><span>02</span><div><h3>Run and record.</h3><p>Real operations and output. Keep failure paths visible.</p></div></li><li><span>03</span><div><h3>Check the evidence.</h3><p>Trace file locations and execution—not just status flags.</p></div></li><li><span>04</span><div><h3>State the limits.</h3><p>Explain what this setup does and does not establish.</p></div></li></ol></section>
+
+<section id="workbench" class="workbench" aria-labelledby="workbench-title"><header class="section-heading"><div><p class="eyebrow">03 / ON THE DESK</p><h2 id="workbench-title">The hardware at hand.</h2></div><p>A small workbench.<br>Not a GPU leaderboard.</p></header><div class="bench-grid"><article class="bench-card"><div class="bench-top"><span>BENCH / 01</span><span class="bench-status">PUBLISHED EXPERIMENTS</span></div><h3>RTX 5060 Ti <span>8 GB</span></h3><p>Windows + WSL2</p><div class="bench-bottom"><span>Cache · CUDA · llama.cpp</span><a href="{{ "/posts/" | relURL }}">View reports ↗</a></div></article><article class="bench-card"><div class="bench-top"><span>BENCH / 02</span><span>AVAILABLE HARDWARE</span></div><h3>MacBook M4 <span>16 GB</span></h3><p>macOS · system memory</p><div class="bench-bottom"><span>No published M4 experiments yet.</span><span class="muted">Results come after testing.</span></div></article></div></section>
+
+<section class="archive-section" aria-labelledby="archive-title"><header class="section-heading"><div><p class="eyebrow">04 / FIELD NOTES</p><h2 id="archive-title">From the notebook.</h2></div><a class="quiet-link" href="{{ "/index.xml" | relURL }}">Follow via RSS ↗</a></header><div class="report-list">{{ range $reports.ByDate.Reverse }}{{ partial "lab/report-row.html" . }}{{ end }}</div></section>
+{{ end }}

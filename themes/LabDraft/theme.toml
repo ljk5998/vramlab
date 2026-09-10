@@ -1,0 +1,3 @@
+name = "VRAM Lab"
+description = "React-free local AI laboratory, with an opt-in review mode."
+min_version = "0.164.0"

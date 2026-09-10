@@ -1,0 +1,4 @@
+# Preserve pinned third-party and Archify receipt bytes across Windows checkouts.
+themes/LabDraft/static/lab/vendor/* -text
+themes/LabDraft/static/lab/diagrams/*.html -text
+design/diagrams/*.json -text

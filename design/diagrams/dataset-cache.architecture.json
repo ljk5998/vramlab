@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "WSL2 데이터셋 캐시: 원본과 Arrow는 다른 위치에 남는다",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 620]
+  },
+  "components": [
+    { "id": "hub-source", "type": "external", "label": "lhoestq/demo1", "sublabel": "고정 revision · 원본 CSV", "pos": [70, 90], "size": [290, 90] },
+    { "id": "hub-files", "type": "database", "label": "다운로드한 원본", "sublabel": "HF_HOME/hub", "pos": [690, 90], "size": [290, 90] },
+    { "id": "prepared-files", "type": "database", "label": "준비된 Arrow", "sublabel": "HF_DATASETS_CACHE", "pos": [690, 400], "size": [290, 90] },
+    { "id": "mapped-files", "type": "database", "label": "변환 결과 Arrow", "sublabel": "cache-<fingerprint>.arrow", "pos": [70, 400], "size": [290, 90] }
+  ],
+  "connections": [
+    { "id": "download-csv", "from": "hub-source", "to": "hub-files", "label": "다운로드", "variant": "emphasis" },
+    { "id": "prepare-arrow", "from": "hub-files", "to": "prepared-files", "label": "데이터 준비", "variant": "emphasis", "labelAt": [835, 290] },
+    { "id": "map-arrow", "from": "prepared-files", "to": "mapped-files", "label": "map() 변환", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "확인한 조건", "items": ["datasets 5.0.1 · WSL2 · 2026-09-06", "HF_DATASETS_CACHE만 별도 지정한 경우"] },
+    { "dot": "amber", "title": "이 도식의 범위", "items": ["기본 map() 출력은 준비된 Arrow 옆에 생성", "환경변수 변경은 기존 파일을 이동하지 않음"] }
+  ]
+}

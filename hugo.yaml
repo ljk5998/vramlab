@@ -1,7 +1,7 @@
 baseURL: https://vramlab.com/
 locale: en-us
 title: VRAM Lab
-theme: PaperMod
+theme: [LabDraft, PaperMod]
 timeZone: Asia/Seoul
 
 enableRobotsTXT: true
@@ -37,7 +37,8 @@ cascade:
 
 params:
   env: production
-  description: "Tested fixes and reproducible benchmarks for local AI on Windows, WSL2, and consumer GPUs. Exact versions, commands, measurements, and logs."
+  labDraft: false
+  description: "Local AI experiments on the hardware at hand. File paths, memory, compatibility, and reproducible results."
   keywords: [local ai, local llm, vram, benchmark, cuda, wsl2, low vram]
   mainSections: [posts]
   author: Sinhyeok Lee

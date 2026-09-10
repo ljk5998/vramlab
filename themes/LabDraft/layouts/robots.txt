@@ -1,0 +1,7 @@
+User-agent: *
+{{- if site.Params.labDraft }}
+Disallow: /
+{{- else }}
+Disallow:
+Sitemap: {{ "sitemap.xml" | absURL }}
+{{- end }}
