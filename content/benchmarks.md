@@ -1,6 +1,6 @@
 ---
 title: "Local AI benchmarks: measured results and limits"
-description: "Measured WSL2 model-loading costs, llama.cpp mixed KV cache throughput, and VHDX disk allocation, with versions, sample definitions, and logs."
+description: "Measured M4 prompt latency and memory, CUDA KV-cache throughput, WSL2 model loading, and VHDX allocation, with versions and logs."
 layout: "single"
 url: "/benchmarks/"
 showToc: false
@@ -10,6 +10,12 @@ hideMeta: true
 ---
 
 These reports measure a specific operation under recorded conditions. Choose a report by the metric you need, then read its test setup before carrying a number into another system.
+
+## Long prompts on Apple Silicon
+
+[Qwen3-8B on a 16GB M4](/posts/m4-16gb-long-context-memory/) measures first-content latency, completion time, process RSS, runtime KV allocation, compression and swap. Nine primary runs cover 2K/4K/8K capacities with progressively longer input and 128 output tokens. A separate 16K scout reached the 120-second first-content cutoff; it is not an OOM or maximum-context result.
+
+The public records include every repeat and distinguish process, runtime and system memory. This is one AC-powered Mac with ordinary apps retained, not a cross-device performance comparison.
 
 ## Inference throughput and KV memory
 

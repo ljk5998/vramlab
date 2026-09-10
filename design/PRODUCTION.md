@@ -48,3 +48,7 @@ artifact 업로드/배포까지 진행하지 않는다.
 [THIRD_PARTY.md](THIRD_PARTY.md)에 있다. 이번 전환은 새 실험이나 측정값 추가가
 아니다. 배포 성공 여부는 이 문서 작성 자체가 아니라 해당 커밋의 GitHub
 Actions 완료 상태와 실제 운영 URL 응답으로 확인한다.
+
+## 후속 실험 추가 — M4
+
+최초 디자인 전환 뒤 M4 context 실험 보고서를 추가한다. 위의 “M4 결과 없음”은 최초 전환 당시 기록이며, 이번 보고서 발행과 함께 홈 장비 카드·Start here·Benchmarks를 실제 결과에 연결한다. 기존 7편의 본문과 고정된 dataset Archify 파일은 그대로 유지한다.

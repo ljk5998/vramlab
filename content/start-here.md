@@ -1,6 +1,6 @@
 ---
-title: "Start here: local AI on Windows and WSL2"
-description: "Find a tested route from WSL2 disk and cache problems to CUDA compatibility and inference benchmarks on consumer GPUs."
+title: "Start here: local AI on WSL2 and Apple Silicon"
+description: "Find tested WSL2 disk and cache fixes, CUDA compatibility checks, and Apple Silicon prompt-latency and memory measurements."
 layout: "single"
 url: "/start-here/"
 showToc: false
@@ -9,7 +9,7 @@ ShowPostNavLinks: false
 hideMeta: true
 ---
 
-Start with the symptom you have now. These reports follow a local AI setup from Windows disk space through the CUDA environment to inference on an 8 GB GPU. Every linked experiment names the environment it tested and includes a session log.
+Start with the symptom you have now. These reports cover Windows disk space, the CUDA environment, inference on an 8 GB GPU, and long prompts on a 16GB M4. Every linked experiment names the environment it tested and includes a session log.
 
 | What is stopping you? | Start with |
 |---|---|
@@ -19,6 +19,7 @@ Start with the symptom you have now. These reports follow a local AI setup from 
 | PyTorch says CUDA is unavailable | [Four reproduced causes on WSL2](/posts/torch-cuda-is-available-false-wsl2/) |
 | PyTorch sees the GPU, but a CUDA operation fails | [CUDA and GPU compatibility](/compatibility/) |
 | llama.cpp runs unusually slowly with mixed KV cache | [The measured CPU/CUDA dispatch difference](/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti/) |
+| A long prompt on a 16GB M4 takes time before any output | [First response, RSS, KV memory and swap](/posts/m4-16gb-long-context-memory/) |
 | You want the performance numbers and their limits | [Benchmarks and measurement conditions](/benchmarks/) |
 
 ## Before applying a fix

@@ -44,3 +44,13 @@ specification byte-for-byte on Windows checkouts.
 
 The concept geometry is custom Three.js code. It is not a model of NVIDIA or
 Apple hardware and does not depict a measured memory allocation.
+
+## M4 report assets — 2026-09-10
+
+- `design/diagrams/m4-memory.architecture.json` uses the same Archify commit above.
+- Specification SHA-256: `401d22755cbeda76cd5befa53f87005790fc3029c6295ce5bde9e44c9327f541`.
+- Delivered `themes/LabDraft/static/lab/diagrams/m4-memory.html` SHA-256:
+  `129f4b3b46c7d9b84c2deadc607c5152a75a9e6cab5edc86308fb2d9c1354e40`.
+- The new diagram and viewer are English. No brand marks are used. The existing dataset diagram is unchanged.
+- The M4 latency, memory and compression SVG figures and `og-m4-context.png` were drawn from the nine verified primary rows with Matplotlib 3.10.8 and DejaVu Sans. No generative image model was used.
+- Archify geometry validation, automated browser evidence, and perceptual image review are separate checks recorded in the private experiment package.

@@ -2,3 +2,9 @@
 themes/LabDraft/static/lab/vendor/* -text
 themes/LabDraft/static/lab/diagrams/*.html -text
 design/diagrams/*.json -text
+
+# Preserve the reviewed M4 measurement and figure bytes.
+static/data/m4-context-* -text
+static/code/m4-context-* -text
+static/logs/m4-context-* -text
+static/images/m4-context-* -text

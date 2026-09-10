@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "One memory pool, three observation scopes",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1120,
+      700
+    ]
+  },
+  "components": [
+    {
+      "id": "prompt_client",
+      "type": "frontend",
+      "label": "SSE client",
+      "sublabel": "First content + completion",
+      "pos": [
+        35,
+        110
+      ],
+      "size": [
+        235,
+        72
+      ]
+    },
+    {
+      "id": "inference_process",
+      "type": "backend",
+      "label": "llama-server",
+      "sublabel": "Process RSS: resident pages",
+      "pos": [
+        430,
+        110
+      ],
+      "size": [
+        245,
+        72
+      ]
+    },
+    {
+      "id": "model_storage",
+      "type": "database",
+      "label": "Q4_K_M model file",
+      "sublabel": "5.03 GB on the SSD",
+      "pos": [
+        830,
+        110
+      ],
+      "size": [
+        250,
+        72
+      ]
+    },
+    {
+      "id": "metal_weights",
+      "type": "backend",
+      "label": "Model buffers",
+      "sublabel": "Same model in every condition",
+      "pos": [
+        60,
+        345
+      ],
+      "size": [
+        260,
+        76
+      ]
+    },
+    {
+      "id": "metal_kv",
+      "type": "backend",
+      "label": "F16 KV buffer",
+      "sublabel": "Allocation grows with context",
+      "pos": [
+        430,
+        345
+      ],
+      "size": [
+        260,
+        76
+      ]
+    },
+    {
+      "id": "metal_compute",
+      "type": "backend",
+      "label": "Compute buffers",
+      "sublabel": "Temporary runtime workspace",
+      "pos": [
+        800,
+        345
+      ],
+      "size": [
+        260,
+        76
+      ]
+    },
+    {
+      "id": "system_memory",
+      "type": "external",
+      "label": "macOS + other apps",
+      "sublabel": "System compression / pressure",
+      "pos": [
+        430,
+        565
+      ],
+      "size": [
+        260,
+        76
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "16 GiB physical memory shared by CPU, GPU and system",
+      "wraps": [
+        "metal_weights",
+        "metal_kv",
+        "metal_compute",
+        "system_memory"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "local_request",
+      "from": "prompt_client",
+      "to": "inference_process",
+      "label": "127.0.0.1",
+      "variant": "emphasis"
+    },
+    {
+      "id": "load_weights",
+      "from": "model_storage",
+      "to": "inference_process",
+      "label": "mmap"
+    },
+    {
+      "id": "uses_kv",
+      "from": "inference_process",
+      "to": "metal_kv",
+      "label": "Metal execution",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          552.5,
+          230
+        ],
+        [
+          592,
+          230
+        ],
+        [
+          592,
+          275
+        ],
+        [
+          560,
+          275
+        ]
+      ]
+    },
+    {
+      "id": "observe_pool",
+      "from": "metal_kv",
+      "to": "system_memory",
+      "label": "shares physical RAM",
+      "variant": "dashed",
+      "labelAt": [
+        560,
+        493
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Process scope",
+      "items": [
+        "RSS and Metal allocations overlap.",
+        "Do not add the reported totals."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Runtime scope",
+      "items": [
+        "Model, KV and compute sizes come from logs.",
+        "Boxes show roles, not allocation proportions."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "System scope",
+      "items": [
+        "Compression and swap include other apps.",
+        "Swap uses the SSD; it is not extra GPU RAM."
+      ]
+    }
+  ]
+}
