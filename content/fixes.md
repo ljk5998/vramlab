@@ -19,6 +19,8 @@ Choose the report by the operation that failed. These experiments cover disk spa
 
 [HF_DATASETS_CACHE: where the other files go](/posts/hf-datasets-cache-wsl2/) follows Hub CSV downloads, generated Arrow files, and saved-dataset transforms through different cache settings. It tests import order, scoped cleanup, and reading a copied cache offline. Use this when the model cache moved but dataset files keep appearing elsewhere.
 
+[Streaming instead of preparing dataset files](/posts/hf-datasets-streaming-cache-wsl2/) tests whether `streaming=True` avoids those files and what a second process reads again. Use this when you want a small prefix without preparing the entire dataset; the measured response ranges show why consumed rows and fetched bytes differ.
+
 Changing a cache directory inside the same WSL filesystem does not move its VHDX to another Windows drive. Deleting cache files and reclaiming Windows disk allocation are separate steps; these reports connect those steps.
 
 ## Resize fails with 0xc03a001a

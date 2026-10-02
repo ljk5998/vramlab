@@ -266,3 +266,5 @@ The 51 cases test storage placement and correctness on one pinned software stack
 The public results contain raw-source checksums, row digests, exact versions, per-case outcomes and the three offline-copy checks. A second fresh Ubuntu rootfs was used to replay the reader commands separately from the primary matrix. The initial scout's wrong column-name assumption was corrected before measurement; its failures are retained in the lab record, not counted as library failures.
 
 If the remaining problem is Windows disk usage after removing cache files, the next operation is different: [the WSL VHDX reclaim experiment](/posts/wsl2-sparse-vhd-cannot-compact/) measures that boundary. For other setup failures, use the [local AI fixes index](/fixes/).
+
+For avoiding full dataset preparation, [the streaming experiment](/posts/hf-datasets-streaming-cache-wsl2/) measures file persistence, partial reads and repeated processes for CSV and Parquet.

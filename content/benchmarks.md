@@ -23,6 +23,10 @@ The public records include every repeat and distinguish process, runtime and sys
 
 The report includes llama.cpp's KV buffer sizes, build cost, and timing samples. Its synthetic-token measurements exclude tokenization and sampling. It does not compare model quality, and process-wide GPU telemetry is not presented as the exact memory use of an individual timed step.
 
+## Dataset streaming and repeated reads
+
+[Hugging Face streaming on WSL2](/posts/hf-datasets-streaming-cache-wsl2/) measures persistent cache files, first-row time, RSS high-water at atexit and repeated HTTP responses. Sixty fresh processes compare normal and streaming reads, CSV and Parquet, a 1,000-row prefix and all 200,000 rows. The response counters are from a loopback server; streaming's time and memory tradeoffs differ by format.
+
 ## Model files on ext4 versus /mnt/c
 
 [Hugging Face cache location on WSL2](/posts/move-huggingface-cache-wsl2/) measures sequential file reads, tokenizer loading, model loading, and loading followed by a first forward pass. The paths were on one physical SSD so the comparison did not also change storage hardware.

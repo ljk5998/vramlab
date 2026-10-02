@@ -15,6 +15,7 @@ Start with the symptom you have now. These reports cover Windows disk space, the
 |---|---|
 | C: is still full after deleting files inside WSL | [WSL2 storage and cache fixes](/fixes/#disk-space-and-model-caches) |
 | Dataset files remain outside the cache directory you configured | [Hub downloads versus generated Arrow caches](/posts/hf-datasets-cache-wsl2/) |
+| You want only a few dataset rows without preparing the whole dataset | [Streaming cache files, read-ahead and repeated reads](/posts/hf-datasets-streaming-cache-wsl2/) |
 | WSL starts, but `--resize` returns `0xc03a001a` | [The measured resize failure and recovery](/posts/wsl-resize-error-0xc03a001a/) |
 | PyTorch says CUDA is unavailable | [Four reproduced causes on WSL2](/posts/torch-cuda-is-available-false-wsl2/) |
 | PyTorch sees the GPU, but a CUDA operation fails | [CUDA and GPU compatibility](/compatibility/) |
