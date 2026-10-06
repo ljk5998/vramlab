@@ -6,6 +6,12 @@ tags: ["huggingface", "wsl2", "disk-space", "cache"]
 images: ["/images/og-hf-cache-wsl2.png"]
 description: "I tested HF_HOME, HF_HUB_CACHE, symlinks, and /mnt/c on WSL2, then measured cleanup behavior with the current hf cache commands."
 showToc: true
+primaryHub: "/fixes"
+relatedReading:
+  - page: "/posts/hf-datasets-cache-wsl2"
+    reason: "Hub downloads and generated Arrow files use separate cache locations."
+  - page: "/posts/wsl2-sparse-vhd-cannot-compact"
+    reason: "Deleting cache files and reclaiming Windows disk space are separate steps."
 ---
 
 <div class="lab-conditions">

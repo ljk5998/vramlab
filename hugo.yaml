@@ -100,16 +100,16 @@ menu:
       url: /compatibility/
       weight: 30
     - identifier: benchmarks
-      name: Benchmarks
+      name: Measurements
       url: /benchmarks/
       weight: 40
+    - identifier: posts
+      name: All reports
+      url: /posts/
+      weight: 50
     - identifier: search
       name: Search
       url: /search/
-      weight: 50
-    - identifier: about
-      name: About
-      url: /about/
       weight: 60
 
 markup:

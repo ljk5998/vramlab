@@ -33,8 +33,16 @@ jobs:
           python3 scripts/lint_content.py
       - name: Production build (초안 제외)
         run: hugo --minify --baseURL "https://vramlab.com/"
+      - name: Setup search runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Search states and failure recovery
+        run: node scripts/check_search_runtime.cjs public
       - name: Production design and SEO checks
         run: python3 scripts/check_production.py public
+      - name: Source and built navigation checks
+        run: python3 scripts/check_navigation.py public
       - name: Draft leak check (빌드 결과에 draft 글이 없는지)
         run: |
           python3 - << 'EOF'
@@ -74,6 +82,8 @@ jobs:
           sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Build
         run: hugo --minify --baseURL "https://vramlab.com/"
+      - name: Source and built navigation checks
+        run: python3 scripts/check_navigation.py public
       - name: External link check (주간)
         uses: lycheeverse/lychee-action@v2
         with:

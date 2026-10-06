@@ -1,0 +1,9 @@
+{{- /* Topic returns and breadcrumbs reuse the configured menu label. */ -}}
+{{- $page := . -}}
+{{- $label := $page.Title -}}
+{{- range site.Menus.main -}}
+  {{- if eq (strings.TrimSuffix "/" (.URL | relURL)) (strings.TrimSuffix "/" $page.RelPermalink) -}}
+    {{- $label = .Name -}}
+  {{- end -}}
+{{- end -}}
+{{- return $label -}}

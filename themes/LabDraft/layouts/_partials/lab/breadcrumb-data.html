@@ -1,0 +1,23 @@
+{{- /* Both visible navigation and BreadcrumbList consume this path. */ -}}
+{{- $page := . -}}
+{{- $items := slice (dict "page" site.Home "label" "Home") -}}
+{{- if and $page.IsPage (eq $page.Section "posts") -}}
+  {{- $navigation := partial "lab/report-navigation.html" $page -}}
+  {{- with $navigation.primaryHub -}}
+    {{- $items = $items | append (dict "page" . "label" (partial "lab/navigation-label.html" .)) -}}
+  {{- else -}}
+    {{- with site.GetPage "/posts" -}}
+      {{- $items = $items | append (dict "page" . "label" "All reports") -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- range $page.Ancestors.Reverse -}}
+    {{- if not .IsHome -}}
+      {{- $items = $items | append (dict "page" . "label" (partial "lab/navigation-label.html" .)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $page.IsHome -}}
+  {{- $items = $items | append (dict "page" $page "label" (partial "lab/navigation-label.html" $page)) -}}
+{{- end -}}
+{{- return $items -}}

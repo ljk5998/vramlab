@@ -41,18 +41,4 @@
       block.append(button);
     });
   }
-  const results = document.getElementById('searchResults');
-  const input = document.getElementById('searchInput');
-  if (results && input) {
-    const status = document.createElement('p');
-    status.className = 'search-status';
-    status.setAttribute('role', 'status');
-    results.before(status);
-    const update = () => {
-      const count = results.children.length;
-      status.textContent = !input.value.trim() ? '' : count ? `${count} matching ${count === 1 ? 'page' : 'pages'}.` : 'No matching pages. Try another term or browse Experiments.';
-    };
-    new MutationObserver(update).observe(results, { childList: true });
-    input.addEventListener('input', () => window.setTimeout(update, 350));
-  }
 })();

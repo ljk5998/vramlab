@@ -1,0 +1,4 @@
+{{- $navigation := partial "lab/report-navigation.html" . -}}
+{{- with $navigation.primaryHub -}}
+<p class="topic-return"><span class="topic-return-label">Topic:</span> <a class="back-link" href="{{ .RelPermalink }}">{{ partial "lab/navigation-label.html" . }} <span aria-hidden="true">↗</span></a></p>
+{{- end -}}

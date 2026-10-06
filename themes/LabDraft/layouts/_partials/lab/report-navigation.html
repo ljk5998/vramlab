@@ -1,0 +1,30 @@
+{{- /* Content references are resolved before links are rendered. Published
+     slugs may differ from source filenames; never construct a report URL. */ -}}
+{{- $page := . -}}
+{{- $allowedHubs := slice "/start-here" "/fixes" "/compatibility" "/benchmarks" -}}
+{{- $hub := false -}}
+{{- $related := slice -}}
+{{- $seen := slice $page.RelPermalink -}}
+{{- if and $page.IsPage (eq $page.Section "posts") -}}
+  {{- with $page.Params.primaryHub -}}
+    {{- with site.GetPage . -}}
+      {{- if and .IsPage (not .Draft) (not (.PublishDate.After now)) (in $allowedHubs .Path) -}}
+        {{- $hub = . -}}
+        {{- $seen = $seen | append .RelPermalink -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range $page.Params.relatedReading -}}
+    {{- $reason := .reason | default "" | plainify | strings.TrimSpace -}}
+    {{- with .page -}}
+      {{- with site.GetPage . -}}
+        {{- $isAllowed := or (in $allowedHubs .Path) (and .IsPage (eq .Section "posts")) -}}
+        {{- if and $isAllowed (not .Draft) (not (.PublishDate.After now)) (not (in $seen .RelPermalink)) $reason (lt (len $related) 2) -}}
+          {{- $related = $related | append (dict "page" . "reason" $reason) -}}
+          {{- $seen = $seen | append .RelPermalink -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "primaryHub" $hub "relatedReading" $related) -}}

@@ -8,6 +8,10 @@ description: "On an RTX 5060 Ti, llama.cpp's default CUDA build sent mixed q8_0/
 showToc: true
 draft: false
 slug: "llama-cpp-mixed-kv-cache-rtx-5060-ti"
+primaryHub: "/benchmarks"
+relatedReading:
+  - page: "/compatibility"
+    reason: "CUDA buffers, completed operations and execution on the intended backend are separate checks."
 ---
 
 I ran llama.cpp with a `q8_0` K cache, a `q4_0` V cache, `-fa on`, and all 29 model layers offloaded. The default CUDA build did not reject that configuration or print a fallback warning. Its 4,096-token prompt-processing median was **132.415 tokens/s**.

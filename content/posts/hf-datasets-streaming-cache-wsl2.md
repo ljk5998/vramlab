@@ -8,6 +8,12 @@ tags: ["huggingface", "wsl2", "cache", "benchmarks"]
 description: "streaming=True on WSL2: actual cache files, first-row latency, RAM and repeated HTTP reads. CSV and Parquet, 60 measured processes."
 images: ["/images/og-hf-streaming-wsl2.png"]
 showToc: true
+primaryHub: "/fixes"
+relatedReading:
+  - page: "/posts/hf-datasets-cache-wsl2"
+    reason: "Compare the Hub downloads and Arrow files created by normal dataset preparation."
+  - page: "/benchmarks"
+    reason: "Read the definitions and limits of repeated reads, elapsed time and memory measurements."
 ---
 
 <div class="lab-conditions">

@@ -5,6 +5,7 @@ url: "/contact/"
 showToc: false
 ShowReadingTime: false
 ShowBreadCrumbs: false
+searchHidden: true
 ---
 
 - Email: `contact@vramlab.com`

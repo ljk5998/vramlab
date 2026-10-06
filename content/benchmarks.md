@@ -11,6 +11,17 @@ hideMeta: true
 
 These reports measure a specific operation under recorded conditions. Choose a report by the metric you need, then read its test setup before carrying a number into another system.
 
+| Question | Metric | Tested environment | Report |
+|---|---|---|---|
+| How long does a long prompt take before content appears? | First-content latency, completion time, process RSS, runtime KV allocation, compression and swap | 16GB M4, macOS 26.6.2, Qwen3-8B Q4_K_M, llama.cpp Metal | [M4 long prompts](/posts/m4-16gb-long-context-memory/) |
+| Where does mixed KV Flash Attention run, and what does that change? | Synthetic prompt-processing and token-generation throughput, KV buffer sizes, scheduler placement | RTX 5060 Ti 8 GB, WSL2, llama.cpp f280b2698, Qwen3 1.7B Q4_K_M | [Mixed KV cache](/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti/) |
+| Does a second streaming process reuse the same files and responses? | Persistent file lengths, first-row time, RSS high-water at exit, HTTP response-body bytes | WSL2 ext4, datasets 5.0.1, CSV and Parquet served by a loopback server | [Streaming and repeated reads](/posts/hf-datasets-streaming-cache-wsl2/) |
+| Does moving a model to /mnt/c change loading costs? | Sequential file reads, tokenizer and model loading, loading plus first forward pass | WSL2 Ubuntu 26.04, ext4 and /mnt/c on one physical Samsung NVMe SSD | [Model cache location](/posts/move-huggingface-cache-wsl2/) |
+| How much Windows disk allocation returns after WSL files are deleted? | VHDX logical length and allocated size during fill, delete and reclaim | Windows 11, WSL 2.7.3, fresh Ubuntu 26.04 | [Sparse VHD and diskpart](/posts/wsl2-sparse-vhd-cannot-compact/) |
+| Which file attributes prevent VHDX expansion? | Resize failure and recovery checks, logical length and allocated size | Windows 11, WSL 2.7.3, compressed and sparse VHDX conditions | [Resize error 0xc03a001a](/posts/wsl-resize-error-0xc03a001a/) |
+
+The rows measure different operations and environments. They are not a shared hardware ranking. For pass/fail CUDA operation results, use [Compatibility](/compatibility/).
+
 ## Long prompts on Apple Silicon
 
 [Qwen3-8B on a 16GB M4](/posts/m4-16gb-long-context-memory/) measures first-content latency, completion time, process RSS, runtime KV allocation, compression and swap. Nine primary runs cover 2K/4K/8K capacities with progressively longer input and 128 output tokens. A separate 16K scout reached the 120-second first-content cutoff; it is not an OOM or maximum-context result.

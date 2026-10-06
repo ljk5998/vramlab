@@ -7,6 +7,8 @@ tags: ["apple-silicon", "llama.cpp", "memory", "benchmarks"]
 description: "Qwen3-8B on a 16GB M4: nine Metal runs measure first response, RSS, KV memory, compression and swap. A separate 16K scout hit a 120-second cutoff."
 images: ["/images/og-m4-context.png"]
 showToc: true
+primaryHub: "/benchmarks"
+relatedReading: []
 ---
 
 <div class="lab-conditions">

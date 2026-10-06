@@ -1,0 +1,14 @@
+{{- $navigation := partial "lab/report-navigation.html" . -}}
+{{- with $navigation.relatedReading }}
+<section class="next-reading" aria-labelledby="next-reading-title">
+  <h2 id="next-reading-title">Next reading</h2>
+  <ul>
+    {{- range . }}
+    <li><a href="{{ .page.RelPermalink }}">{{ .page.Title }}</a><p class="reading-reason">{{ .reason }}</p></li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}
+{{- with $navigation.primaryHub }}
+<p class="topic-return"><a class="quiet-link" href="{{ .RelPermalink }}">Back to {{ partial "lab/navigation-label.html" . }} <span aria-hidden="true">↗</span></a></p>
+{{- end }}

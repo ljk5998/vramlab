@@ -5,6 +5,7 @@ url: "/privacy-policy/"
 showToc: true
 ShowReadingTime: false
 ShowBreadCrumbs: false
+searchHidden: true
 ---
 
 _Last updated: 2026-08-05_

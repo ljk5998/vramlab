@@ -1,0 +1,10 @@
+{{- if and (not .IsHome) (or .IsPage .IsSection) -}}
+{{- $items := partial "lab/breadcrumb-data.html" . -}}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {{- range $index, $item := $items }}
+    <li>{{ if eq $index (sub (len $items) 1) }}<span aria-current="page">{{ $item.label }}</span>{{ else }}<a href="{{ $item.page.RelPermalink }}">{{ $item.label }}</a>{{ end }}</li>
+    {{- end }}
+  </ol>
+</nav>
+{{- end -}}

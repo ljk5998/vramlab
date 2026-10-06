@@ -1,12 +1,19 @@
 {{ define "main" }}
-{{ $reports := where site.RegularPages "Section" "posts" }}
+{{ $reports := where (where (where site.RegularPages "Section" "posts") "Draft" false) "PublishDate" "le" now }}
 <section class="hero" aria-labelledby="hero-title">
+  <div class="hero-introduction">
   <div class="hero-copy">
     <p class="eyebrow"><span class="rule"></span> LOCAL AI · INDEPENDENT EXPERIMENTS</p>
     <h1 id="hero-title">Small hardware.<br><em>Deep experiments.</em></h1>
     <p class="hero-description">What can the hardware on my desk actually do?<br> Experiments in file paths, memory, and compatibility.<br> Tested conditions. Commands you can repeat.</p>
-    <div class="hero-actions"><a class="button button-primary" href="#experiments">Explore the experiments <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#workbench">Inside the lab <span aria-hidden="true">↘</span></a></div>
+    <div class="hero-actions">{{ with site.GetPage "/start-here" }}<a class="button button-primary" href="{{ .RelPermalink }}">Find your starting point <span aria-hidden="true">↗</span></a>{{ end }}<a class="quiet-link" href="#workbench">Inside the lab <span aria-hidden="true">↘</span></a></div>
     <div class="hero-footnote"><span>{{ printf "%02d" (len $reports) }} REPORTS</span><span>WINDOWS / WSL2</span><span>CONSUMER HARDWARE</span></div>
+  </div>
+  <nav class="hero-topics" aria-label="Choose a task">
+    {{ with site.GetPage "/fixes" }}<a class="topic-card" href="{{ .RelPermalink }}"><strong>Disk and cache fixes</strong><span>Choose a file, cache, or WSL disk task.</span></a>{{ end }}
+    {{ with site.GetPage "/compatibility" }}<a class="topic-card" href="{{ .RelPermalink }}"><strong>CUDA compatibility</strong><span>Separate GPU detection from completed operations.</span></a>{{ end }}
+    {{ with site.GetPage "/benchmarks" }}<a class="topic-card" href="{{ .RelPermalink }}"><strong>Performance and memory</strong><span>Find the metric and tested conditions.</span></a>{{ end }}
+  </nav>
   </div>
   <figure class="scene-panel" aria-labelledby="scene-caption">
     <div class="scene-top"><span>STUDY 01 / LAYERS</span><span>CONCEPTUAL 3D</span></div>
@@ -15,6 +22,11 @@
     </div>
     <div class="scene-bottom"><figcaption id="scene-caption">A study in layers.<br><span>Not a hardware model or live measurement.</span></figcaption><div class="scene-controls" hidden><button type="button" id="scene-layout" aria-pressed="true">Assemble</button><button type="button" id="scene-motion" aria-pressed="false">Pause</button></div></div>
   </figure>
+</section>
+
+<section class="latest-section" id="latest-reports" aria-labelledby="latest-title">
+  <header class="section-heading"><div><p class="eyebrow">LATEST / PUBLISHED REPORTS</p><h2 id="latest-title">Recently recorded.</h2></div><a class="quiet-link" href="{{ "/posts/" | relURL }}">All reports <span aria-hidden="true">↗</span></a></header>
+  <div class="report-list">{{ range first 2 $reports.ByPublishDate.Reverse }}{{ partial "lab/report-row.html" . }}{{ end }}</div>
 </section>
 
 <section class="selected-section" id="experiments" aria-labelledby="experiments-title">

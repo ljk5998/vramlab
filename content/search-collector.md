@@ -7,6 +7,7 @@ draft: false
 showToc: true
 ShowReadingTime: false
 ShowBreadCrumbs: false
+searchHidden: true
 ---
 
 _Last updated: 2026-10-01._

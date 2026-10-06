@@ -8,6 +8,10 @@ description: "I tested four reasons torch.cuda.is_available() returns False on W
 showToc: true
 draft: false
 slug: "torch-cuda-is-available-false-wsl2"
+primaryHub: "/compatibility"
+relatedReading:
+  - page: "/posts/pytorch-2-13-rtx-5060-ti-cuda-wheels"
+    reason: "After GPU detection succeeds, test the required CUDA operation; this report uses a different GPU and driver."
 ---
 
 On WSL2, `nvidia-smi` saw my GPU and `torch.cuda.device_count()` returned 1, but `torch.cuda.is_available()` returned `False`:

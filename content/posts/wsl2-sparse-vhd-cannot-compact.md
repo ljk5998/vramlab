@@ -6,6 +6,12 @@ tags: ["wsl2", "windows", "disk-space", "troubleshooting"]
 images: ["/images/og-wsl2-vhdx.png"]
 description: "Deleted 20 GB inside WSL but ext4.vhdx stayed huge? Measured on WSL 2.7.3: fstrim no longer needed, sparse VHD gated as unsafe, diskpart rejects sparse files."
 showToc: true
+primaryHub: "/fixes"
+relatedReading:
+  - page: "/posts/move-huggingface-cache-wsl2"
+    reason: "Choose which model cache files to move or remove before reclaiming disk space."
+  - page: "/posts/hf-datasets-cache-wsl2"
+    reason: "Hub downloads and generated Arrow files occupy separate cache locations."
 ---
 
 <div class="lab-conditions">

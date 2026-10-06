@@ -7,6 +7,12 @@ tags: ["huggingface", "wsl2", "cache", "disk-space"]
 description: "Measured Hub downloads, Arrow files, import order, saved datasets, and cleanup on WSL2. Why HF_DATASETS_CACHE and cache_dir leave other files behind."
 images: ["/images/og-hf-datasets-cache-wsl2.png"]
 showToc: true
+primaryHub: "/fixes"
+relatedReading:
+  - page: "/posts/move-huggingface-cache-wsl2"
+    reason: "Use the Hub cache report for model downloads and moving existing snapshot files."
+  - page: "/posts/hf-datasets-streaming-cache-wsl2"
+    reason: "Check streaming's file and repeated-read behavior when avoiding full dataset preparation."
 ---
 
 <div class="lab-conditions">

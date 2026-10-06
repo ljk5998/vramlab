@@ -14,6 +14,7 @@ Start with the symptom you have now. These reports cover Windows disk space, the
 | What is stopping you? | Start with |
 |---|---|
 | C: is still full after deleting files inside WSL | [WSL2 storage and cache fixes](/fixes/#disk-space-and-model-caches) |
+| Model downloads land in the wrong directory, or an existing Hub cache needs to move | [HF_HOME, snapshot symlinks and cache cleanup on WSL2](/posts/move-huggingface-cache-wsl2/) |
 | Dataset files remain outside the cache directory you configured | [Hub downloads versus generated Arrow caches](/posts/hf-datasets-cache-wsl2/) |
 | You want only a few dataset rows without preparing the whole dataset | [Streaming cache files, read-ahead and repeated reads](/posts/hf-datasets-streaming-cache-wsl2/) |
 | WSL starts, but `--resize` returns `0xc03a001a` | [The measured resize failure and recovery](/posts/wsl-resize-error-0xc03a001a/) |
@@ -21,7 +22,7 @@ Start with the symptom you have now. These reports cover Windows disk space, the
 | PyTorch sees the GPU, but a CUDA operation fails | [CUDA and GPU compatibility](/compatibility/) |
 | llama.cpp runs unusually slowly with mixed KV cache | [The measured CPU/CUDA dispatch difference](/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti/) |
 | A long prompt on a 16GB M4 takes time before any output | [First response, RSS, KV memory and swap](/posts/m4-16gb-long-context-memory/) |
-| You want the performance numbers and their limits | [Benchmarks and measurement conditions](/benchmarks/) |
+| You want the performance numbers and their limits | [Measurements and their test conditions](/benchmarks/) |
 
 ## Before applying a fix
 

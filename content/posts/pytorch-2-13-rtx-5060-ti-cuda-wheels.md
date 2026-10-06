@@ -8,6 +8,10 @@ description: "All three PyTorch 2.13 wheels saw my RTX 5060 Ti, but cu126 mixed 
 showToc: true
 draft: false
 slug: "pytorch-2-13-rtx-5060-ti-cuda-wheels"
+primaryHub: "/compatibility"
+relatedReading:
+  - page: "/posts/torch-cuda-is-available-false-wsl2"
+    reason: "Start here if GPU detection itself fails; the reproduced causes use an RTX 3060 Laptop on a different driver."
 ---
 
 PyTorch 2.13.0+cu126 found my RTX 5060 Ti and returned `True` here:

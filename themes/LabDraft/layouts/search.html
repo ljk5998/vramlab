@@ -1,4 +1,12 @@
 {{ define "main" }}
 <header class="page-heading"><p class="eyebrow">FIND A FIELD NOTE</p><h1>Search the notebook.</h1><p>Try a command, error, or component name.</p></header>
-<div id="searchbox" class="searchbox"><label for="searchInput">Search reports and topic guides</label><input id="searchInput" disabled type="search" autocomplete="off" maxlength="64" placeholder="e.g. HF_DATASETS_CACHE" aria-label="Search reports and topic guides"><ul id="searchResults" class="searchResults" aria-label="Search results"></ul><noscript><p>Interactive search needs JavaScript. <a href="{{ "/posts/" | relURL }}">Browse all reports instead.</a></p></noscript></div>
+<div id="searchbox" class="searchbox" data-search-state="loading" data-index-url="{{ "index.json" | relURL }}" aria-busy="true">
+  <label for="searchInput">Search reports and topic guides</label>
+  <input id="searchInput" disabled type="search" autocomplete="off" maxlength="64" placeholder="e.g. HF_DATASETS_CACHE" aria-label="Search reports and topic guides" aria-describedby="searchStatus" aria-controls="searchResults">
+  <p id="searchStatus" class="search-status" role="status" aria-live="polite">Loading the search index…</p>
+  <ul id="searchResults" class="searchResults" aria-label="Search results"></ul>
+  <button id="searchRetry" class="search-retry button button-outline" type="button" hidden>Retry search</button>
+  <noscript><p>Interactive search needs JavaScript. Use the links below to find a report.</p></noscript>
+  <nav id="searchFallback" class="search-fallback" aria-label="Other ways to find a report">{{ with site.GetPage "/start-here" }}<a class="quiet-link" href="{{ .RelPermalink }}">Start here <span aria-hidden="true">↗</span></a>{{ end }}{{ with site.GetPage "/posts" }}<a class="quiet-link" href="{{ .RelPermalink }}">All reports <span aria-hidden="true">↗</span></a>{{ end }}</nav>
+</div>
 {{ end }}

@@ -8,6 +8,10 @@ description: "On WSL 2.7.3, compressed and sparse VHDX files booted but --resize
 showToc: true
 draft: false
 slug: "wsl-resize-error-0xc03a001a"
+primaryHub: "/fixes"
+relatedReading:
+  - page: "/posts/wsl2-sparse-vhd-cannot-compact"
+    reason: "Expanding a VHDX and reclaiming its Windows allocation require different operations."
 ---
 
 My WSL distro booted normally. Then this failed:
