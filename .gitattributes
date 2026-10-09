@@ -8,3 +8,6 @@ static/data/m4-context-* -text
 static/code/m4-context-* -text
 static/logs/m4-context-* -text
 static/images/m4-context-* -text
+
+# Preserve frozen RTX evidence and figures byte-for-byte on every checkout.
+static/logs/rtx5060ti-context-host-ram-stop-20261007/* -text

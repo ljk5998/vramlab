@@ -1,6 +1,6 @@
 ---
 title: "Local AI benchmarks: measured results and limits"
-description: "Measured M4 prompt latency and memory, CUDA KV-cache throughput, WSL2 model loading, and VHDX allocation, with versions and logs."
+description: "Measured M4 latency, CUDA KV-cache throughput, Qwen3-8B host RAM guard stops, WSL2 loading, and VHDX allocation, with versions and logs."
 layout: "single"
 url: "/benchmarks/"
 showToc: false
@@ -14,6 +14,7 @@ These reports measure a specific operation under recorded conditions. Choose a r
 | Question | Metric | Tested environment | Report |
 |---|---|---|---|
 | How long does a long prompt take before content appears? | First-content latency, completion time, process RSS, runtime KV allocation, compression and swap | 16GB M4, macOS 26.6.2, Qwen3-8B Q4_K_M, llama.cpp Metal | [M4 long prompts](/posts/m4-16gb-long-context-memory/) |
+| What remains usable after a Qwen3-8B context batch hits a host RAM guard? | Six n=1 scouts, sampled memory, host safety trace, and one separate fresh-build replay; zero eligible primary results | RTX 5060 Ti 8 GB, Windows 11 / Ubuntu 24.04.4 WSL2, Qwen3-8B Q4_K_M, F16 K/V | [Qwen3-8B host RAM stop](/posts/qwen3-8b-context-wsl2-host-ram-stop/) |
 | Where does mixed KV Flash Attention run, and what does that change? | Synthetic prompt-processing and token-generation throughput, KV buffer sizes, scheduler placement | RTX 5060 Ti 8 GB, WSL2, llama.cpp f280b2698, Qwen3 1.7B Q4_K_M | [Mixed KV cache](/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti/) |
 | Does a second streaming process reuse the same files and responses? | Persistent file lengths, first-row time, RSS high-water at exit, HTTP response-body bytes | WSL2 ext4, datasets 5.0.1, CSV and Parquet served by a loopback server | [Streaming and repeated reads](/posts/hf-datasets-streaming-cache-wsl2/) |
 | Does moving a model to /mnt/c change loading costs? | Sequential file reads, tokenizer and model loading, loading plus first forward pass | WSL2 Ubuntu 26.04, ext4 and /mnt/c on one physical Samsung NVMe SSD | [Model cache location](/posts/move-huggingface-cache-wsl2/) |
@@ -29,6 +30,8 @@ The rows measure different operations and environments. They are not a shared ha
 The public records include every repeat and distinguish process, runtime and system memory. This is one AC-powered Mac with ordinary apps retained, not a cross-device performance comparison.
 
 ## Inference throughput and KV memory
+
+[Qwen3-8B on WSL2: a host RAM guard stop](/posts/qwen3-8b-context-wsl2-host-ram-stop/) preserves six individually validated scouts at 2K/4K/8K capacities with all-offloaded or `--gpu-layers 18`. Each condition has one observation. The later eighteen-trial primary plan stopped during startup with zero final eligible results. The report includes the host safety trace and one separate fresh-build 2K replay; it does not establish a maximum context, CUDA OOM, or a hardware ranking.
 
 [llama.cpp mixed KV cache on RTX 5060 Ti](/posts/llama-cpp-mixed-kv-cache-rtx-5060-ti/) compares prompt processing and token generation for several K/V cache types and context depths. The experiment changes one CUDA build option and uses separate scheduler traces to verify where mixed-cache Flash Attention runs.
 
