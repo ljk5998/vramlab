@@ -29,7 +29,7 @@ relatedReading:
     reason: "Deleting cache files and reclaiming Windows disk space are separate steps."
 ```
 
-- `primaryHub`: `/start-here`, `/fixes`, `/compatibility`, `/benchmarks` 중 실제 과제에 맞는 콘텐츠 참조. 현재 9편은 3개 주제 안내에 분배했지만 Start here도 허용한다. 기본 복귀 경로이며 배타적 분류가 아니다.
+- `primaryHub`: `/start-here`, `/fixes`, `/compatibility`, `/benchmarks` 중 실제 과제에 맞는 콘텐츠 참조. 현재 10편은 3개 주제 안내에 분배했지만 Start here도 허용한다. 기본 복귀 경로이며 배타적 분류가 아니다.
 - `relatedReading`: 0~2개. `page`와 비어 있지 않은 dry English `reason`을 가진 block mapping을 쓴다. 관련 대상이 없으면 `[]`다.
 - `page`: 공개 보고서 또는 `/start-here`, `/fixes`, `/compatibility`, `/benchmarks`의 실제 콘텐츠 참조. `site.GetPage` 결과의 `.RelPermalink`를 렌더링한다.
 - 본인·중복 목적지·주 안내와 동일 목적지·draft·미래 발행·없는 페이지·허용 밖 페이지는 제외한다.
@@ -56,7 +56,7 @@ Resize 콘텐츠 참조는 `/posts/wsl2-vhd-uncompressed-unencrypted-not-sparse`
 
 ## 검색과 장비 범위
 
-검색 JSON은 공개 보고서 N편 + 안내 4개다. 현재 9+4=13은 대상 수이며
+검색 JSON은 공개 보고서 N편 + 안내 4개다. 현재 10+4=14는 대상 수이며
 검색 결과 상한이나 최대 보고서 수가 아니다. About·Contact·Privacy Policy·
 Search Collector의 `searchHidden: true`와 직접·하단 접근을 유지한다.
 

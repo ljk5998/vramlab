@@ -17,8 +17,9 @@
 
 ## 콘텐츠와 연결
 
-현재 공개 보고서는 9편이다. 10번째 RTX context 보고서는 2026-10-10 발행 준비 중이며,
-실제 배포 확인 뒤 공개 수를 갱신한다. 안내는 4개다.
+현재 공개 보고서는 10편이며 이 수는 제한이 아니다. 안내는 4개다.
+RTX context 보고서는 2026-10-10 발행·Checks·Pages·실제 URL 및 공개 자료 검증을
+완료했다. 범위와 미확인 화면 항목은 [발행 기록](docs/RTX_CONTEXT_PUBLICATION_2026-10-10.md)에 있다.
 
 | 안내 | 기존 URL | 독자 질문 |
 |---|---|---|
@@ -43,9 +44,10 @@ Measurements라는 이름 때문에 `/benchmarks/` URL을 변경하지 않는다
 | `hf-datasets-cache-wsl2` | Fixes |
 | `m4-16gb-long-context-memory` | Measurements |
 | `hf-datasets-streaming-cache-wsl2` | Fixes |
+| `qwen3-8b-context-wsl2-host-ram-stop` | Measurements |
 
 `primaryHub`는 `/start-here`, `/fixes`, `/compatibility`, `/benchmarks` 중
-실제 과제에 맞는 콘텐츠 참조다. 현재 9편은 3개 주제 안내에 분배했으며
+실제 과제에 맞는 콘텐츠 참조다. 현재 10편은 3개 주제 안내에 분배했으며
 향후 Start here도 허용한다. 배타적 분류가 아니므로 다른 안내에서 교차 연결해도
 된다. `relatedReading`은 공개 보고서·4개 안내 중 직접 관련된 0~2개이며
 실제 콘텐츠 참조 `page`와 dry English 연결 이유 `reason`을 갖는다.
@@ -62,7 +64,7 @@ slug와 다르다. `site.GetPage`로 찾은 페이지의 `.RelPermalink`를 쓴�
 - 보고서 위·아래는 같은 주 안내로 복귀한다. 관련 글에는 제목과 연결 이유를 표시한다.
 - 화면 breadcrumb와 JSON-LD는 `lab/breadcrumb-data.html`의 같은 경로를 사용한다. `BlogPosting`은 보고서에만 유지한다.
 - 홈 최신 목록은 공개 `PublishDate`순 2편이며 draft·미래 발행을 제외한다. 선정 카드의 수치·주석을 새 글에 재사용하지 않는다.
-- 검색은 공개 보고서 N편 + 안내 4개다. 현재 13개는 대상 수이며 검색 결과 상한이 아니다.
+- 검색은 공개 보고서 N편 + 안내 4개다. 현재 14개는 대상 수이며 검색 결과 상한이 아니다.
 - About·Contact·Privacy Policy·Search Collector는 `searchHidden: true`지만 직접 URL과 문맥·하단 접근은 유지한다.
 - Search·tag/category의 기존 `noindex, follow`·사이트맵 제외 정책을 유지한다. 보고서·큐레이션 안내는 색인 가능하다.
 - `/fixes/#disk-space-and-model-caches` 앵커와 Streaming SVG의 500×860 예약을 보존한다. CLS 개선 폭은 실측 없이 기록하지 않는다.

@@ -67,6 +67,21 @@ evidence are not copied to public storage.
 
 ## Remote state
 
-Prepared and locally verified. Commit, push, Checks, Pages and live URL/download
-verification are pending at this record's preparation cutoff. Do not infer a
-successful deployment from the local build.
+Publication source commit: `c7275923fb78f72cbc8882f19ad771ada5ad8d16`, pushed to
+main. Its [Checks run](https://github.com/ljk5998/vramlab/actions/runs/37964152723)
+and [Pages run](https://github.com/ljk5998/vramlab/actions/runs/37964152702) both
+completed successfully. These run IDs refer to the publication source commit;
+subsequent completion-record edits do not change the article or asset bytes.
+
+Live HTTPS verification completed at 2026-10-10 02:12 KST: the report, home,
+Measurements, all reports, search JSON, RSS, sitemap and four downloads returned
+200. All four download SHA-256 values matched the table above. The report's
+canonical URL matched and was indexable; search contained 14 entries, RSS had
+10 reports with the new report first, and the sitemap had 20 URLs including the
+new report. This verifies public responses and bytes, not browser rendering or
+Google indexing. The browser permission limitation above remains applicable.
+
+Private commit and synchronization status is recorded separately in the memory
+repository against this source reference and the shared release ID. Original
+experiment and WSL design states are preserved; Git synchronization is not a
+full backup of local raw data.
